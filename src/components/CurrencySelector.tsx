@@ -80,3 +80,4 @@ export default function CurrencySelector({ compact = false, className = "" }: Cu
     </div>
   );
 }
+

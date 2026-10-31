@@ -387,24 +387,24 @@ export default function SubscriptionDetailPage() {
 
           {/* Pricing Summary */}
           <div className="p-6 border-t border-slate-200 flex justify-end bg-slate-50/50">
-            <div className="w-full sm:w-72 space-y-2 text-xs">
+            <div className="w-full sm:w-80 space-y-2 text-xs">
               <div className="flex justify-between text-slate-600">
                 <span>Subtotal:</span>
-                <span className="font-medium text-slate-900">{formatCurrency(sub.subtotal)}</span>
+                <span className="font-medium text-slate-900 tabular-nums whitespace-nowrap">{formatCurrency(sub.subtotal)}</span>
               </div>
               {sub.discountAmount > 0 && (
                 <div className="flex justify-between text-emerald-600 font-medium">
                   <span>Discount:</span>
-                  <span>-{formatCurrency(sub.discountAmount)}</span>
+                  <span className="tabular-nums whitespace-nowrap">-{formatCurrency(sub.discountAmount)}</span>
                 </div>
               )}
               <div className="flex justify-between text-slate-600">
                 <span>Taxes:</span>
-                <span className="font-medium text-slate-900">+{formatCurrency(sub.taxAmount)}</span>
+                <span className="font-medium text-slate-900 tabular-nums whitespace-nowrap">+{formatCurrency(sub.taxAmount)}</span>
               </div>
               <div className="pt-2 border-t border-slate-200 flex justify-between text-base font-bold text-slate-900">
                 <span>Total Amount:</span>
-                <span className="text-emerald-600">{formatCurrency(sub.totalAmount)}</span>
+                <span className="text-emerald-700 font-extrabold tabular-nums whitespace-nowrap">{formatCurrency(sub.totalAmount)}</span>
               </div>
             </div>
           </div>

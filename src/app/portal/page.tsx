@@ -163,7 +163,7 @@ export default function CustomerPortalPage() {
                 <AlertCircle className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-3xl font-black text-amber-700">
+            <div className="text-3xl font-black text-amber-700 tabular-nums truncate whitespace-nowrap">
               {formatCurrency(unpaidInvoices.reduce((sum, inv) => sum + inv.balanceDue, 0))}
             </div>
             <div className="text-xs text-slate-500 mt-1">{unpaidInvoices.length} unpaid invoices</div>
@@ -224,7 +224,7 @@ export default function CustomerPortalPage() {
                       <td className="px-6 py-4 text-slate-600 text-xs">
                         {sub.status === "ACTIVE" ? formatDate(sub.nextBillingDate) : "—"}
                       </td>
-                      <td className="px-6 py-4 font-bold text-slate-900">{formatCurrency(sub.totalAmount)}</td>
+                      <td className="px-6 py-4 font-bold text-slate-900 tabular-nums whitespace-nowrap">{formatCurrency(sub.totalAmount)}</td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-2">
                           {sub.status === "ACTIVE" && sub.plan?.allowPause && (

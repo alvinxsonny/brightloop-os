@@ -117,21 +117,22 @@ export default function Navbar({ user }: NavbarProps) {
     <>
       {/* =========================================================================
           1. VERTICAL LEFT FLOATING PILL SIDEBAR (Desktop)
-          - Icon-only when not hovered (slim pill)
-          - Expands smoothly on hover to show label text, branding & quick actions
+          - Centered icon alignment in resting phase (slim pill w-16)
+          - Expands smoothly on hover to w-64 without wrapping glitches
+          - Clean user avatar profile indicator
           ========================================================================= */}
       <aside className="hidden md:flex fixed left-5 top-1/2 -translate-y-1/2 z-50 group/sidebar">
-        <div className="glass-pill rounded-full p-2.5 transition-all duration-300 ease-in-out w-[62px] group-hover/sidebar:w-64 group-hover/sidebar:rounded-3xl shadow-xl shadow-emerald-950/8 flex flex-col justify-between max-h-[92vh] overflow-hidden">
+        <div className="glass-pill rounded-3xl p-2 transition-all duration-300 ease-in-out w-16 group-hover/sidebar:w-64 shadow-xl shadow-emerald-950/8 flex flex-col justify-between max-h-[92vh] overflow-hidden">
           {/* Top Logo */}
-          <div className="flex items-center gap-3 px-1 py-1">
+          <div className="flex items-center h-12 px-1">
             <Link
               href="/"
-              className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-600 text-white shrink-0 shadow-md shadow-emerald-600/30 hover:bg-emerald-700 transition"
-              title="BrightLoop OS"
+              className="w-10 h-10 rounded-2xl bg-white/90 border border-emerald-500/20 shadow-xs flex items-center justify-center shrink-0 overflow-hidden hover:scale-105 transition-transform"
+              title="BrightLoop OS Home"
             >
-              <Repeat className="w-4 h-4" />
+              <img src="/logo-icon.png" alt="BrightLoop OS" className="w-8 h-8 object-contain" />
             </Link>
-            <div className="opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-200 whitespace-nowrap overflow-hidden">
+            <div className="ml-3 opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-200 whitespace-nowrap overflow-hidden">
               <span className="font-bold text-sm tracking-tight text-slate-900 block leading-tight">
                 BrightLoop OS
               </span>
@@ -142,79 +143,79 @@ export default function Navbar({ user }: NavbarProps) {
           </div>
 
           {/* Nav Items */}
-          <div className="my-4 space-y-1.5 overflow-y-auto overflow-x-hidden pr-0.5">
+          <div className="my-3 space-y-1.5 overflow-y-auto overflow-x-hidden">
             {navLinks.map((item) => {
               const isActive = (item as any).active || pathname === item.href;
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-3.5 px-2.5 py-2.5 rounded-2xl text-xs transition cursor-pointer relative ${
+                  className={`group/item flex items-center h-10 px-1 rounded-xl text-xs transition cursor-pointer overflow-hidden ${
                     isActive
-                      ? "bg-emerald-500/15 text-emerald-900 font-bold border border-emerald-500/30 shadow-xs"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-emerald-50/60"
+                      ? "bg-emerald-500/15 text-emerald-900 font-bold border border-emerald-500/30"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-emerald-50/70"
                   }`}
                   title={item.label}
                 >
-                  <div className={`shrink-0 flex items-center justify-center w-6 h-6 rounded-lg ${
-                    isActive ? "text-emerald-700 font-bold" : "text-slate-500"
+                  <div className={`w-10 h-10 shrink-0 flex items-center justify-center rounded-lg transition-colors ${
+                    isActive ? "text-emerald-700 font-bold" : "text-slate-500 group-hover/item:text-emerald-700"
                   }`}>
                     {item.icon}
                   </div>
-                  <span className="opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-200 whitespace-nowrap font-medium text-slate-800">
+                  <span className="ml-3 font-medium text-slate-800 whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-200">
                     {item.label}
                   </span>
                   {isActive && (
-                    <span className="absolute right-2.5 w-1.5 h-1.5 rounded-full bg-emerald-600 opacity-0 group-hover/sidebar:opacity-100 transition-opacity" />
+                    <span className="ml-auto mr-2 w-1.5 h-1.5 rounded-full bg-emerald-600 opacity-0 group-hover/sidebar:opacity-100 transition-opacity shrink-0" />
                   )}
                 </Link>
               );
             })}
           </div>
 
-          {/* Bottom Actions: Currency Selector & User / Logout */}
-          <div className="pt-3 border-t border-emerald-500/15 flex flex-col gap-2">
-            {/* Currency Selector */}
-            <div className="flex items-center gap-2 px-1">
-              <CurrencySelector compact />
-              <div className="opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-200 whitespace-nowrap text-[11px] text-slate-500 font-medium">
-                Switch Currency
-              </div>
-            </div>
-
-            {/* User Profile info */}
+          {/* Bottom Actions: User Profile */}
+          <div className="pt-2 border-t border-emerald-500/15">
             {user ? (
-              <div className="flex items-center justify-between gap-2 px-1 pt-1">
-                <div className="flex items-center gap-2 overflow-hidden">
-                  <div className="w-8 h-8 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-800 flex items-center justify-center font-bold text-xs shrink-0">
-                    {user.name?.charAt(0) || "U"}
-                  </div>
-                  <div className="opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-200 overflow-hidden text-left">
-                    <span className="text-xs font-semibold text-slate-900 block truncate">
-                      {user.name}
-                    </span>
-                    <span className="text-[10px] text-slate-500 block truncate">
-                      {user.role}
-                    </span>
-                  </div>
+              <div className="flex items-center h-12 px-1">
+                <div
+                  className="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm border-2 border-white"
+                  title={`${user.name} (${user.role})`}
+                >
+                  {user.name?.charAt(0).toUpperCase() || "U"}
                 </div>
-
+                <div className="ml-3 opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-200 overflow-hidden text-left flex-1 min-w-0">
+                  <span className="text-xs font-semibold text-slate-900 block truncate leading-tight">
+                    {user.name}
+                  </span>
+                  <span className="text-[10px] text-slate-500 block truncate font-medium">
+                    {user.role}
+                  </span>
+                </div>
                 <button
                   onClick={handleLogout}
-                  className="opacity-0 group-hover/sidebar:opacity-100 transition-opacity p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg shrink-0 cursor-pointer"
+                  className="ml-2 opacity-0 group-hover/sidebar:opacity-100 transition-opacity p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg shrink-0 cursor-pointer"
                   title="Sign Out"
                 >
-                  <LogOut className="w-3.5 h-3.5" />
+                  <LogOut className="w-4 h-4" />
                 </button>
               </div>
             ) : (
-              <div className="opacity-0 group-hover/sidebar:opacity-100 transition-opacity flex flex-col gap-1.5 px-1">
+              <div className="flex items-center h-10 px-1">
                 <Link
                   href="/login"
-                  className="w-full text-center py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs"
+                  className="w-10 h-10 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center shrink-0 shadow-xs"
+                  title="Sign In"
                 >
-                  Sign In
+                  <UserCheck className="w-4 h-4" />
                 </Link>
+                <div className="ml-3 opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                  <Link
+                    href="/login"
+                    className="text-xs font-semibold text-emerald-800 hover:underline"
+                  >
+                    Sign In
+                  </Link>
+                </div>
               </div>
             )}
           </div>
@@ -229,20 +230,19 @@ export default function Navbar({ user }: NavbarProps) {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Left Title / Location */}
           <div className="flex items-center gap-3">
-            <Link href="/" className="md:hidden flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-xs">
-                <Repeat className="w-4 h-4" />
+            <Link href="/" className="flex items-center gap-2.5">
+              <div className="h-9 px-2 py-1 rounded-xl bg-white/90 border border-emerald-500/20 shadow-xs flex items-center justify-center">
+                <img src="/logo.png" alt="BrightLoop" className="h-6 w-auto object-contain" />
               </div>
-              <span className="font-bold text-base tracking-tight text-slate-900">BrightLoop</span>
+              <span className="font-bold text-base tracking-tight text-slate-900 hidden sm:inline">BrightLoop OS</span>
             </Link>
 
-            <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500">
-              <span className="font-semibold text-slate-800 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                Brightloop Software OS
-              </span>
+            <div className="hidden lg:flex items-center gap-2 text-xs text-slate-500">
               <span>•</span>
-              <span className="text-emerald-700 font-medium">Cloudy White & Jade Edition</span>
+              <span className="font-semibold text-slate-700 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                Subscription & Recurring Billing Platform
+              </span>
             </div>
           </div>
 

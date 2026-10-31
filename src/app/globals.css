@@ -90,9 +90,18 @@ body {
 }
 
 @media print {
+  @page {
+    margin: 12mm;
+    size: auto;
+  }
   body {
     background: #ffffff !important;
     color: #0f1e18 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  header, aside {
+    display: none !important;
   }
   .no-print {
     display: none !important;

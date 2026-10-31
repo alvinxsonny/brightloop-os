@@ -295,12 +295,12 @@ export default function FinanceDashboardPage() {
                 <DollarSign className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-3xl font-black text-slate-900 tracking-tight">
+            <div className="text-3xl font-black text-slate-900 tracking-tight tabular-nums truncate whitespace-nowrap">
               {formatCurrency(data?.kpis?.mrr || 0)}
             </div>
             <div className="flex items-center justify-between text-xs mt-3 pt-3 border-t border-slate-100">
               <span className="text-slate-500">Annual Run-rate (ARR):</span>
-              <span className="text-emerald-700 font-semibold font-mono">
+              <span className="text-emerald-700 font-semibold font-mono tabular-nums truncate whitespace-nowrap">
                 {formatCurrency(data?.kpis?.arr || 0)}
               </span>
             </div>
@@ -336,12 +336,12 @@ export default function FinanceDashboardPage() {
                 <CheckCircle2 className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-3xl font-black text-emerald-700 tracking-tight">
+            <div className="text-3xl font-black text-emerald-700 tracking-tight tabular-nums truncate whitespace-nowrap">
               {formatCurrency(data?.kpis?.totalCollected || 0)}
             </div>
             <div className="flex items-center justify-between text-xs mt-3 pt-3 border-t border-slate-100">
               <span className="text-slate-500">Total Invoiced:</span>
-              <span className="text-slate-800 font-semibold font-mono">
+              <span className="text-slate-800 font-semibold font-mono tabular-nums truncate whitespace-nowrap">
                 {formatCurrency(data?.kpis?.totalInvoiced || 0)}
               </span>
             </div>
@@ -365,7 +365,7 @@ export default function FinanceDashboardPage() {
                 <AlertTriangle className="w-4 h-4" />
               </div>
             </div>
-            <div className={`text-3xl font-black tracking-tight ${
+            <div className={`text-3xl font-black tracking-tight tabular-nums truncate whitespace-nowrap ${
               (data?.kpis?.overdueCount || 0) > 0 ? "text-rose-700" : "text-slate-900"
             }`}>
               {formatCurrency(data?.kpis?.overdueAmount || 0)}
@@ -497,7 +497,7 @@ export default function FinanceDashboardPage() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm font-bold text-emerald-600">{formatCurrency(p.mrr)}/mo</div>
+                    <div className="text-sm font-bold text-emerald-600 tabular-nums whitespace-nowrap">{formatCurrency(p.mrr)}/mo</div>
                     <div className="text-[10px] text-slate-400">MRR Share</div>
                   </div>
                 </div>
@@ -547,9 +547,9 @@ export default function FinanceDashboardPage() {
                             {c.activeSubscriptions}
                           </span>
                         </td>
-                        <td className="py-3 px-3 font-mono text-slate-700">{formatCurrency(c.totalInvoiced)}</td>
-                        <td className="py-3 px-3 font-mono font-semibold text-emerald-600">{formatCurrency(c.totalPaid)}</td>
-                        <td className="py-3 px-3 font-mono font-semibold">
+                        <td className="py-3 px-3 font-mono text-slate-700 tabular-nums whitespace-nowrap">{formatCurrency(c.totalInvoiced)}</td>
+                        <td className="py-3 px-3 font-mono font-semibold text-emerald-600 tabular-nums whitespace-nowrap">{formatCurrency(c.totalPaid)}</td>
+                        <td className="py-3 px-3 font-mono font-semibold tabular-nums whitespace-nowrap">
                           <span className={c.balanceDue > 0 ? "text-rose-600" : "text-slate-400"}>
                             {formatCurrency(c.balanceDue)}
                           </span>
@@ -695,10 +695,10 @@ export default function FinanceDashboardPage() {
                           Due: {formatDate(inv.dueDate)}
                         </div>
                       </td>
-                      <td className="py-3.5 px-4 font-mono font-semibold text-slate-900">
+                      <td className="py-3.5 px-4 font-mono font-semibold text-slate-900 tabular-nums whitespace-nowrap">
                         {formatCurrency(inv.totalAmount)}
                       </td>
-                      <td className="py-3.5 px-4 font-mono font-bold">
+                      <td className="py-3.5 px-4 font-mono font-bold tabular-nums whitespace-nowrap">
                         <span className={inv.balanceDue > 0 ? (inv.isOverdue ? "text-rose-600" : "text-amber-600") : "text-emerald-600"}>
                           {formatCurrency(inv.balanceDue)}
                         </span>

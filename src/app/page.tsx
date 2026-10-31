@@ -46,15 +46,12 @@ export default function HomePage() {
       <header className="glass-panel sticky top-0 z-40 border-b border-emerald-500/15 px-6 py-3.5">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-3 group cursor-pointer">
-            <div className="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shadow-md shadow-emerald-600/30 group-hover:rotate-180 transition-transform duration-500">
-              <Repeat className="w-5 h-5" />
+            <div className="h-10 px-2 py-1 rounded-2xl bg-white/90 border border-emerald-500/20 shadow-xs flex items-center justify-center">
+              <img src="/logo.png" alt="BrightLoop OS" className="h-7 w-auto object-contain" />
             </div>
             <div>
               <span className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-1.5">
                 BrightLoop OS
-                <span className="hidden sm:inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
-                  Jade Edition
-                </span>
               </span>
               <span className="block text-[11px] text-emerald-700 font-medium">
                 Subscription & Recurring Billing Platform
@@ -407,21 +404,21 @@ export default function HomePage() {
 
             {/* Result Tiles */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="p-4 rounded-2xl bg-white border border-emerald-200 text-center shadow-xs">
-                <span className="text-[10px] uppercase font-bold text-slate-500">Projected MRR</span>
-                <span className="text-xl sm:text-2xl font-black text-emerald-700 block mt-1">
+              <div className="p-4 rounded-2xl bg-white border border-emerald-200 text-center shadow-xs overflow-hidden">
+                <span className="text-[10px] uppercase font-bold text-slate-500 block">Projected MRR</span>
+                <span className="text-lg sm:text-2xl font-black text-emerald-700 block mt-1 tabular-nums whitespace-nowrap truncate">
                   {formatCurrency(calculatedMRR)}
                 </span>
               </div>
-              <div className="p-4 rounded-2xl bg-white border border-emerald-200 text-center shadow-xs">
-                <span className="text-[10px] uppercase font-bold text-slate-500">Projected ARR</span>
-                <span className="text-xl sm:text-2xl font-black text-slate-900 block mt-1">
+              <div className="p-4 rounded-2xl bg-white border border-emerald-200 text-center shadow-xs overflow-hidden">
+                <span className="text-[10px] uppercase font-bold text-slate-500 block">Projected ARR</span>
+                <span className="text-lg sm:text-2xl font-black text-slate-900 block mt-1 tabular-nums whitespace-nowrap truncate">
                   {formatCurrency(calculatedARR)}
                 </span>
               </div>
-              <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-300 text-center shadow-xs">
-                <span className="text-[10px] uppercase font-bold text-emerald-800">Hours Saved/Mo</span>
-                <span className="text-xl sm:text-2xl font-black text-emerald-800 block mt-1">
+              <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-300 text-center shadow-xs overflow-hidden">
+                <span className="text-[10px] uppercase font-bold text-emerald-800 block">Hours Saved/Mo</span>
+                <span className="text-lg sm:text-2xl font-black text-emerald-800 block mt-1 tabular-nums whitespace-nowrap truncate">
                   ~{hoursSaved} hrs
                 </span>
               </div>
@@ -488,8 +485,8 @@ export default function HomePage() {
           {/* Col 1: Brand Info */}
           <div className="space-y-3">
             <div className="flex items-center space-x-2.5">
-              <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold">
-                <Repeat className="w-4 h-4" />
+              <div className="h-8 px-2 py-1 rounded-xl bg-white/90 border border-emerald-500/20 flex items-center justify-center shadow-xs">
+                <img src="/logo.png" alt="BrightLoop Logo" className="h-5 w-auto object-contain" />
               </div>
               <span className="text-base font-bold text-slate-900">BrightLoop OS</span>
             </div>

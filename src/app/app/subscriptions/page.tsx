@@ -166,7 +166,7 @@ export default function SubscriptionsListPage() {
                       <td className="px-6 py-4 text-xs text-slate-600">
                         {sub.status === "ACTIVE" ? formatDate(sub.nextBillingDate) : "—"}
                       </td>
-                      <td className="px-6 py-4 font-bold text-slate-900">
+                      <td className="px-6 py-4 font-bold text-slate-900 tabular-nums whitespace-nowrap">
                         {formatCurrency(sub.totalAmount)}
                       </td>
                       <td className="px-6 py-4 text-right">

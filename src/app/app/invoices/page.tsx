@@ -231,8 +231,8 @@ export default function InvoicesListPage() {
                           {inv.isOverdue ? "OVERDUE" : inv.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4 font-bold text-slate-900">{formatCurrency(inv.totalAmount)}</td>
-                      <td className="px-6 py-4 font-semibold">
+                      <td className="px-6 py-4 font-bold text-slate-900 tabular-nums whitespace-nowrap">{formatCurrency(inv.totalAmount)}</td>
+                      <td className="px-6 py-4 font-semibold tabular-nums whitespace-nowrap">
                         {inv.balanceDue > 0 ? (
                           <span className={inv.isOverdue ? "text-rose-600" : "text-amber-600"}>
                             {formatCurrency(inv.balanceDue)}

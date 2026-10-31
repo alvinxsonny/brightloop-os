@@ -58,8 +58,8 @@ export default function RegisterPage() {
     <div className="min-h-screen text-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
         <Link href="/" className="inline-flex items-center space-x-2.5 mb-4 group cursor-pointer">
-          <div className="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shadow-md shadow-emerald-600/30 group-hover:rotate-180 transition-transform duration-500">
-            <Repeat className="w-5 h-5" />
+          <div className="h-10 px-2 py-1 rounded-2xl bg-white/90 border border-emerald-500/20 shadow-xs flex items-center justify-center">
+            <img src="/logo.png" alt="BrightLoop OS" className="h-7 w-auto object-contain" />
           </div>
           <span className="text-2xl font-extrabold tracking-tight text-slate-900">BrightLoop OS</span>
         </Link>

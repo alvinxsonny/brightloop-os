@@ -479,21 +479,21 @@ export default function NewSubscriptionPage() {
             <div className="w-full sm:w-72 space-y-2 text-xs">
               <div className="flex justify-between text-slate-500">
                 <span>Subtotal:</span>
-                <span className="font-medium text-slate-900">{formatCurrency(subtotal)}</span>
+                <span className="font-medium text-slate-900 tabular-nums whitespace-nowrap">{formatCurrency(subtotal)}</span>
               </div>
               {totalDiscount > 0 && (
                 <div className="flex justify-between text-emerald-700 font-medium">
                   <span>Discounts Applied:</span>
-                  <span>-{formatCurrency(totalDiscount)}</span>
+                  <span className="tabular-nums whitespace-nowrap">-{formatCurrency(totalDiscount)}</span>
                 </div>
               )}
               <div className="flex justify-between text-slate-500">
                 <span>Taxes & GST:</span>
-                <span className="font-medium text-slate-900">+{formatCurrency(totalTax)}</span>
+                <span className="font-medium text-slate-900 tabular-nums whitespace-nowrap">+{formatCurrency(totalTax)}</span>
               </div>
               <div className="pt-2 border-t border-slate-200 flex justify-between text-base font-bold text-slate-900">
                 <span>Recurring Total:</span>
-                <span className="text-emerald-700">{formatCurrency(grandTotal)}</span>
+                <span className="text-emerald-700 font-extrabold tabular-nums whitespace-nowrap">{formatCurrency(grandTotal)}</span>
               </div>
             </div>
           </div>

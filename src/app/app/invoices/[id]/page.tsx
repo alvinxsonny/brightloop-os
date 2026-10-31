@@ -12,15 +12,17 @@ import {
   CreditCard,
   AlertCircle,
   DollarSign,
+  Download,
   X,
 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useToast } from "@/components/ToastProvider";
+import InvoiceQRCode from "@/components/InvoiceQRCode";
 
 export default function InvoiceDetailPage() {
   const { toast } = useToast();
-  const { formatCurrency } = useCurrency();
+  const { formatCurrency, currency } = useCurrency();
   const params = useParams();
   const id = params?.id as string;
 
@@ -135,6 +137,15 @@ export default function InvoiceDetailPage() {
     window.print();
   };
 
+  const handleDownloadPdf = () => {
+    const originalTitle = document.title;
+    document.title = `Invoice-${invoice?.invoiceNumber || "BrightLoop"}.pdf`;
+    window.print();
+    setTimeout(() => {
+      document.title = originalTitle;
+    }, 1500);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
@@ -179,11 +190,21 @@ export default function InvoiceDetailPage() {
 
           <div className="flex flex-wrap items-center gap-2">
             <button
+              onClick={handleDownloadPdf}
+              className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition shadow-sm flex items-center gap-1.5 cursor-pointer"
+              title="Download formal PDF invoice"
+            >
+              <Download className="w-3.5 h-3.5" />
+              Download PDF
+            </button>
+
+            <button
               onClick={handlePrint}
-              className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-medium text-xs transition border border-slate-300 shadow-sm flex items-center gap-1.5"
+              className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-medium text-xs transition border border-slate-300 shadow-sm flex items-center gap-1.5 cursor-pointer"
+              title="Print Invoice"
             >
               <Printer className="w-3.5 h-3.5" />
-              Print / Save PDF
+              Print
             </button>
 
             {invoice.balanceDue > 0 && invoice.status !== "CANCELLED" && (
@@ -192,9 +213,9 @@ export default function InvoiceDetailPage() {
                   setPaymentAmount(invoice.balanceDue.toString());
                   setShowPaymentModal(true);
                 }}
-                className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition shadow-sm flex items-center gap-1.5"
+                className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition shadow-sm flex items-center gap-1.5 cursor-pointer"
               >
-                <DollarSign className="w-3.5 h-3.5" />
+                <DollarSign className="w-3.5 h-3.5 text-emerald-400" />
                 Record Payment
               </button>
             )}
@@ -243,8 +264,8 @@ export default function InvoiceDetailPage() {
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6 pb-8 border-b border-slate-200">
             <div>
               <div className="flex items-center gap-2.5 mb-2">
-                <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-sm">
-                  B
+                <div className="h-9 px-2 py-1 rounded-xl bg-white border border-slate-200 flex items-center justify-center shadow-xs">
+                  <img src="/logo.png" alt="BrightLoop Logo" className="h-6 w-auto object-contain" />
                 </div>
                 <span className="text-xl font-bold tracking-tight text-slate-900">
                   Brightloop Software Inc.
@@ -356,32 +377,32 @@ export default function InvoiceDetailPage() {
 
           {/* Totals Section */}
           <div className="pt-4 border-t border-slate-200 flex justify-end">
-            <div className="w-full sm:w-72 space-y-2 text-xs">
+            <div className="w-full sm:w-80 space-y-2 text-xs">
               <div className="flex justify-between text-slate-600">
                 <span>Subtotal:</span>
-                <span className="font-medium text-slate-900">{formatCurrency(invoice.subtotal)}</span>
+                <span className="font-medium text-slate-900 tabular-nums whitespace-nowrap">{formatCurrency(invoice.subtotal)}</span>
               </div>
               {invoice.discountAmount > 0 && (
                 <div className="flex justify-between text-emerald-600 font-medium">
                   <span>Discounts:</span>
-                  <span>-{formatCurrency(invoice.discountAmount)}</span>
+                  <span className="tabular-nums whitespace-nowrap">-{formatCurrency(invoice.discountAmount)}</span>
                 </div>
               )}
               <div className="flex justify-between text-slate-600">
                 <span>Taxes:</span>
-                <span className="font-medium text-slate-900">+{formatCurrency(invoice.taxAmount)}</span>
+                <span className="font-medium text-slate-900 tabular-nums whitespace-nowrap">+{formatCurrency(invoice.taxAmount)}</span>
               </div>
               <div className="pt-2 border-t border-slate-200 flex justify-between text-base font-bold text-slate-900">
                 <span>Invoice Total:</span>
-                <span className="text-emerald-600">{formatCurrency(invoice.totalAmount)}</span>
+                <span className="text-emerald-700 tabular-nums whitespace-nowrap">{formatCurrency(invoice.totalAmount)}</span>
               </div>
               <div className="flex justify-between text-xs font-semibold text-slate-600 pt-1">
                 <span>Amount Paid:</span>
-                <span className="text-slate-900">{formatCurrency(invoice.paidAmount)}</span>
+                <span className="text-slate-900 tabular-nums whitespace-nowrap">{formatCurrency(invoice.paidAmount)}</span>
               </div>
               <div className="flex justify-between text-sm font-bold pt-1 border-t border-slate-100">
                 <span>Balance Due:</span>
-                <span className={invoice.balanceDue > 0 ? "text-amber-600" : "text-emerald-600"}>
+                <span className={`tabular-nums whitespace-nowrap ${invoice.balanceDue > 0 ? "text-amber-600 font-extrabold" : "text-emerald-600 font-bold"}`}>
                   {formatCurrency(invoice.balanceDue)}
                 </span>
               </div>
@@ -409,7 +430,7 @@ export default function InvoiceDetailPage() {
                       )}
                     </div>
                     <div className="text-right">
-                      <span className="font-bold text-emerald-600">{formatCurrency(p.amount)}</span>
+                      <span className="font-bold text-emerald-600 tabular-nums whitespace-nowrap">{formatCurrency(p.amount)}</span>
                       <span className="block text-[10px] text-slate-400">
                         {formatDate(p.paymentDate)}
                       </span>
@@ -420,13 +441,28 @@ export default function InvoiceDetailPage() {
             </div>
           )}
 
-          {/* Footer note */}
-          <div className="mt-8 pt-6 border-t border-slate-200 text-xs text-slate-500">
-            <span className="font-semibold text-slate-900 block mb-1">Payment Instructions:</span>
-            <p>
-              Please wire payments to Silicon Valley Bank • Account: 9812-4410-09 • Routing: 121000358.<br />
-              Reference Invoice Number <strong>{invoice.invoiceNumber}</strong> with remittance. Thank you for partnering with Brightloop!
-            </p>
+          {/* Payment Instructions & Optional Payment QR Code */}
+          <div className="mt-8 pt-6 border-t border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-6 text-xs items-start">
+            <div className="text-slate-500 space-y-2">
+              <span className="font-semibold text-slate-900 block text-xs">Payment Instructions:</span>
+              <p className="leading-relaxed">
+                Please wire payments to Silicon Valley Bank<br />
+                Account: <strong className="text-slate-800">9812-4410-09</strong><br />
+                Routing: <strong className="text-slate-800">121000358</strong>
+              </p>
+              <p className="leading-relaxed">
+                Reference Invoice Number <strong className="text-slate-900 font-mono">{invoice.invoiceNumber}</strong> with remittance. Thank you for partnering with Brightloop!
+              </p>
+            </div>
+
+            <div>
+              <InvoiceQRCode
+                invoiceNumber={invoice.invoiceNumber}
+                amount={invoice.balanceDue}
+                formattedAmount={formatCurrency(invoice.balanceDue)}
+                currencyCode={currency}
+              />
+            </div>
           </div>
         </div>
 
