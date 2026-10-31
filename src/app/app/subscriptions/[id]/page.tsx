@@ -22,8 +22,10 @@ import {
   Tag,
 } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { useToast } from "@/components/ToastProvider";
 
 export default function SubscriptionDetailPage() {
+  const { toast } = useToast();
   const params = useParams();
   const router = useRouter();
   const id = params?.id as string;
@@ -75,10 +77,15 @@ export default function SubscriptionDetailPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to update status");
 
+      toast.success(
+        data.message || `Subscription transitioned to ${data.subscription?.status || action}!`,
+        "Lifecycle State Machine"
+      );
       setSuccess(data.message || "Status updated successfully.");
       setSub(data.subscription);
       setTimeout(() => setSuccess(null), 3500);
     } catch (err: any) {
+      toast.error(err.message, "State Transition Failed");
       setError(err.message);
     } finally {
       setUpdating(false);

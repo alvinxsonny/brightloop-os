@@ -20,8 +20,10 @@ import {
   X,
 } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { useToast } from "@/components/ToastProvider";
 
 export default function InvoiceDetailPage() {
+  const { toast } = useToast();
   const params = useParams();
   const router = useRouter();
   const id = params?.id as string;
@@ -82,10 +84,12 @@ export default function InvoiceDetailPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to update status");
 
+      toast.success(data.message || `Invoice ${action.toLowerCase()}ed successfully.`, "Invoice Status");
       setMessage(data.message);
       setInvoice(data.invoice);
       setTimeout(() => setMessage(null), 3500);
     } catch (err: any) {
+      toast.error(err.message, "Status Update Failed");
       setError(err.message);
     } finally {
       setUpdating(false);
@@ -115,11 +119,16 @@ export default function InvoiceDetailPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to record payment");
 
+      toast.success(
+        `Payment of ${formatCurrency(parseFloat(paymentAmount) || 0)} recorded successfully!`,
+        "Payment Received"
+      );
       setMessage(data.message);
       setShowPaymentModal(false);
       fetchInvoice();
       setTimeout(() => setMessage(null), 3500);
     } catch (err: any) {
+      toast.error(err.message, "Payment Error");
       setError(err.message);
     } finally {
       setRecordingPayment(false);

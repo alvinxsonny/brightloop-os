@@ -40,10 +40,12 @@ import {
   Cell,
 } from "recharts";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { useToast } from "@/components/ToastProvider";
 
 const CHART_COLORS = ["#6366f1", "#06b6d4", "#10b981", "#f59e0b", "#ec4899", "#8b5cf6"];
 
 export default function FinanceDashboardPage() {
+  const { toast } = useToast();
   const [user, setUser] = useState<any>(null);
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -122,16 +124,20 @@ export default function FinanceDashboardPage() {
 
       const json = await res.json();
       if (!res.ok) {
-        alert(json.error || "Payment recording failed");
+        toast.error(json.error || "Payment recording failed", "Payment Error");
       } else {
+        toast.success(
+          `Payment of ${formatCurrency(parseFloat(paymentAmount))} recorded for ${selectedInvoiceForPayment.invoiceNumber}!`,
+          "Payment Recorded"
+        );
         setActionSuccess(`Payment of ${formatCurrency(parseFloat(paymentAmount))} recorded for ${selectedInvoiceForPayment.invoiceNumber}!`);
         setTimeout(() => setActionSuccess(null), 4000);
         setPaymentModalOpen(false);
         fetchAnalytics(); // Refresh instantly
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert("Error submitting payment");
+      toast.error(err.message || "Error submitting payment", "Payment Error");
     } finally {
       setPaymentSubmitting(false);
     }
@@ -180,6 +186,7 @@ export default function FinanceDashboardPage() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    toast.success("Finance ledger exported as CSV", "Export Ready");
   };
 
   // Filtered invoices

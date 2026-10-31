@@ -17,8 +17,10 @@ import {
   CreditCard,
 } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { useToast } from "@/components/ToastProvider";
 
 export default function InvoicesListPage() {
+  const { toast } = useToast();
   const [user, setUser] = useState<any>(null);
   const [invoices, setInvoices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -65,10 +67,18 @@ export default function InvoicesListPage() {
       });
 
       const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Billing run failed");
+      }
       setBillingResult(data);
+      toast.success(
+        `Cycle completed! ${data.generatedCount || 0} invoice(s) generated, ${data.skippedCount || 0} skipped (idempotent).`,
+        "Billing Engine"
+      );
       fetchInvoices();
     } catch (err: any) {
       console.error(err);
+      toast.error(err.message || "Failed to execute billing run", "Billing Engine Error");
     } finally {
       setRunningBilling(false);
     }

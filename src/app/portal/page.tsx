@@ -18,8 +18,10 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { useToast } from "@/components/ToastProvider";
 
 export default function CustomerPortalPage() {
+  const { toast } = useToast();
   const [user, setUser] = useState<any>(null);
   const [subscriptions, setSubscriptions] = useState<any[]>([]);
   const [invoices, setInvoices] = useState<any[]>([]);
@@ -71,10 +73,15 @@ export default function CustomerPortalPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Action failed");
 
+      toast.success(
+        data.message || `Subscription updated (${action}) successfully.`,
+        "Customer Portal"
+      );
       setMessage(data.message || "Subscription updated successfully.");
       fetchCustomerData();
       setTimeout(() => setMessage(null), 3500);
     } catch (err: any) {
+      toast.error(err.message, "Action Failed");
       setError(err.message);
     } finally {
       setActionLoading(false);
