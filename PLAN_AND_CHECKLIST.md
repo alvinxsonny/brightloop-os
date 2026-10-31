@@ -11,7 +11,7 @@
 - [x] **Phase 1: Architecture, Data Schema & Instant Seeding** *(0:00 - 0:30)*
 - [x] **Phase 2: Auth, Security & Role-Based Access Control (RBAC)** *(0:30 - 1:15)*
 - [x] **Phase 3: Product Catalog, Quotation Templates & Subscriptions** *(1:15 - 2:15)*
-- [ ] **Phase 4: Automated Billing Engine & Invoicing** *(2:15 - 3:15)*
+- [x] **Phase 4: Automated Billing Engine & Invoicing** *(2:15 - 3:15)*
 - [ ] **Phase 5: Payment Entry, Receivables & Customer Portal** *(3:15 - 4:00)*
 - [ ] **Phase 6: Executive Finance Lead Dashboard (<2s Response)** *(4:00 - 4:40)*
 - [ ] **Phase 7: UI Polish, Aesthetics & Hackathon Demo Walkthrough** *(4:40 - 5:30)*
@@ -73,18 +73,18 @@
 ---
 
 ### Phase 4: Automated Billing Engine & Invoicing (60 mins)
-- [ ] **Automated Billing Engine (`/api/billing/run-cycle`):**
-  - [ ] Query all active subscriptions with `nextBillingDate <= today`.
-  - [ ] Auto-generate `Invoice` records with calculated line items.
-  - [ ] **Idempotency protection:** check billing cycle dates so no subscription is billed twice.
-  - [ ] Auto-advance subscription's `nextBillingDate` based on plan frequency.
-- [ ] **Tax & Discount Calculation Engine:**
-  - [ ] Dynamic tax calculation from admin rules.
-  - [ ] Discount rule application (percentage/fixed, minimum spend/seat criteria, usage counter increment).
-- [ ] **Manual & Automated Invoice Actions:**
-  - [ ] One-click "Trigger Billing Run" simulation button for hackathon judges.
-  - [ ] Invoice lifecycle: `Draft` ➔ `Confirmed` ➔ `Paid` / `Cancelled`.
-  - [ ] Print / PDF-friendly clean invoice view.
+- [x] **Automated Billing Engine (`/api/billing/run-cycle`):**
+  - [x] Query all active subscriptions with `nextBillingDate <= today`.
+  - [x] Auto-generate `Invoice` records with calculated line items.
+  - [x] **Idempotency protection:** check billing cycle dates so no subscription is billed twice.
+  - [x] Auto-advance subscription's `nextBillingDate` based on plan frequency.
+- [x] **Tax & Discount Calculation Engine:**
+  - [x] Dynamic tax calculation from admin rules.
+  - [x] Discount rule application (percentage/fixed, minimum spend/seat criteria, usage counter increment).
+- [x] **Manual & Automated Invoice Actions:**
+  - [x] One-click "Trigger Billing Run" simulation button for hackathon judges.
+  - [x] Invoice lifecycle: `Draft` ➔ `Confirmed` ➔ `Paid` / `Cancelled`.
+  - [x] Print / PDF-friendly clean invoice view.
 
 ---
 

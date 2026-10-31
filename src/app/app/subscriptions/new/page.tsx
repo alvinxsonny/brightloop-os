@@ -550,3 +550,4 @@ export default function NewSubscriptionPage() {
     </div>
   );
 }
+

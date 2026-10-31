@@ -114,6 +114,14 @@ export default function Navbar({ user }: NavbarProps) {
                 >
                   Staff Team
                 </Link>
+                <Link
+                  href="/admin/rules"
+                  className={`px-3 py-1.5 rounded-lg transition ${
+                    pathname === "/admin/rules" ? "bg-slate-800 text-white font-semibold" : "hover:text-white hover:bg-slate-800/60"
+                  }`}
+                >
+                  Taxes & Discounts
+                </Link>
               </>
             )}
 

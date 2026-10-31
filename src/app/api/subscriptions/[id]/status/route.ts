@@ -141,3 +141,4 @@ export async function PATCH(
     return NextResponse.json({ error: "Failed to update subscription status." }, { status: 500 });
   }
 }
+

@@ -201,3 +201,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: error.message || "Failed to create subscription" }, { status: 500 });
   }
 }
+

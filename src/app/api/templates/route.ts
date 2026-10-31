@@ -71,3 +71,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Failed to create quotation template." }, { status: 500 });
   }
 }
+
