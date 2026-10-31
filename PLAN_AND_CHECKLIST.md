@@ -9,7 +9,7 @@
 ## 📌 Progress Tracker Overview
 
 - [x] **Phase 1: Architecture, Data Schema & Instant Seeding** *(0:00 - 0:30)*
-- [ ] **Phase 2: Auth, Security & Role-Based Access Control (RBAC)** *(0:30 - 1:15)*
+- [x] **Phase 2: Auth, Security & Role-Based Access Control (RBAC)** *(0:30 - 1:15)*
 - [ ] **Phase 3: Product Catalog, Quotation Templates & Subscriptions** *(1:15 - 2:15)*
 - [ ] **Phase 4: Automated Billing Engine & Invoicing** *(2:15 - 3:15)*
 - [ ] **Phase 5: Payment Entry, Receivables & Customer Portal** *(3:15 - 4:00)*
@@ -41,18 +41,18 @@
 ---
 
 ### Phase 2: Auth, Security & RBAC Guards (45 mins)
-- [ ] Authentication system (session/JWT cookie with bcrypt).
-- [ ] Strict password validator on registration:
-  - [ ] Length > 8 characters
-  - [ ] At least 1 uppercase letter
-  - [ ] At least 1 lowercase letter
-  - [ ] At least 1 special character
-- [ ] Forgot password / reset password endpoint & UI flow.
-- [ ] RBAC Middleware & Route Guards:
-  - [ ] `/admin/*` -> Admin only (staff management, system config)
-  - [ ] `/app/*` -> Staff & Admin (quotes, subscriptions, billing, payments)
-  - [ ] `/portal/*` -> Customer only (own subscriptions & invoices)
-- [ ] Hackathon Demo Role-Switcher widget (1-click switch between Admin, Staff, Customer).
+- [x] Authentication system (session/JWT cookie with bcrypt).
+- [x] Strict password validator on registration:
+  - [x] Length > 8 characters
+  - [x] At least 1 uppercase letter
+  - [x] At least 1 lowercase letter
+  - [x] At least 1 special character
+- [x] Forgot password / reset password endpoint & UI flow.
+- [x] RBAC Middleware & Route Guards:
+  - [x] `/admin/*` -> Admin only (staff management, system config)
+  - [x] `/app/*` -> Staff & Admin (quotes, subscriptions, billing, payments)
+  - [x] `/portal/*` -> Customer only (own subscriptions & invoices)
+- [x] Hackathon Demo Role-Switcher widget (1-click switch between Admin, Staff, Customer).
 
 ---
 
