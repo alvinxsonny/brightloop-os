@@ -36,6 +36,7 @@ export default function Navbar({ user }: NavbarProps) {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [showLogoPrompt, setShowLogoPrompt] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
 
   const handleConfirmLogout = async () => {
@@ -49,6 +50,21 @@ export default function Navbar({ user }: NavbarProps) {
     } finally {
       setLoggingOut(false);
       setShowLogoutConfirm(false);
+      setShowLogoPrompt(false);
+    }
+  };
+
+  const getDashboardHref = () => {
+    if (!user) return "/";
+    if (user.role === "ADMIN") return "/admin";
+    if (user.role === "STAFF") return "/app";
+    return "/portal";
+  };
+
+  const handleLogoClick = (e: React.MouseEvent) => {
+    if (user) {
+      e.preventDefault();
+      setShowLogoPrompt(true);
     }
   };
 
@@ -132,9 +148,10 @@ export default function Navbar({ user }: NavbarProps) {
           {/* Top Logo - ONLY logo.png with no border and no text */}
           <div className="flex items-center h-12 px-1">
             <Link
-              href="/"
+              href={getDashboardHref()}
+              onClick={handleLogoClick}
               className="flex items-center h-10 w-10 group-hover/sidebar:w-48 overflow-hidden transition-all duration-300 shrink-0 cursor-pointer"
-              title="BrightLoop"
+              title={user ? `Go to ${user.role} Dashboard` : "BrightLoop"}
             >
               <img
                 src="/logo.png"
@@ -231,7 +248,12 @@ export default function Navbar({ user }: NavbarProps) {
       <header className="glass-panel border-b border-emerald-500/10 sticky top-0 z-30 px-6 py-3.5 md:pl-28 transition-all">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Left: ONLY the logo.png file with no border and no particular text */}
-          <Link href="/" className="flex items-center cursor-pointer" title="BrightLoop">
+          <Link
+            href={getDashboardHref()}
+            onClick={handleLogoClick}
+            className="flex items-center cursor-pointer"
+            title={user ? `Go to ${user.role} Dashboard` : "BrightLoop"}
+          >
             <img
               src="/logo.png"
               alt="BrightLoop"
@@ -355,6 +377,57 @@ export default function Navbar({ user }: NavbarProps) {
                 className="flex-1 px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs transition shadow-sm cursor-pointer disabled:opacity-60 flex items-center justify-center gap-1.5"
               >
                 {loggingOut ? "Signing out..." : "Sign Out"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================================
+          4. LOGGED-IN NAVIGATION / LOGOUT PROMPT MODAL
+          ========================================================================= */}
+      {showLogoPrompt && user && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-slate-200 max-w-sm w-full text-center relative animate-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 mx-auto flex items-center justify-center mb-4 shadow-xs">
+              <Shield className="w-6 h-6" />
+            </div>
+
+            <h3 className="text-lg font-bold text-slate-900 mb-1">
+              Active Session: {user.name}
+            </h3>
+            <p className="text-xs text-slate-500 leading-relaxed mb-6">
+              You are currently signed in as a <strong className="text-slate-800 font-semibold">{user.role}</strong>. What would you like to do?
+            </p>
+
+            <div className="flex flex-col gap-2.5">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowLogoPrompt(false);
+                  router.push(getDashboardHref());
+                }}
+                className="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-sm transition flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span>Go to {user.role === "ADMIN" ? "Admin" : user.role === "STAFF" ? "Staff" : "Customer"} Dashboard</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleConfirmLogout}
+                disabled={loggingOut}
+                className="w-full py-2.5 px-4 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold text-xs border border-rose-200 transition flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>Sign Out & Return to Landing Page</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setShowLogoPrompt(false)}
+                className="w-full py-2 px-4 rounded-xl text-slate-500 hover:text-slate-800 text-xs font-medium transition cursor-pointer"
+              >
+                Stay on Current Page
               </button>
             </div>
           </div>

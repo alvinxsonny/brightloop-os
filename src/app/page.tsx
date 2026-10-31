@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -30,6 +30,17 @@ import { useCurrency } from "@/context/CurrencyContext";
 export default function HomePage() {
   const { formatCurrency, currency } = useCurrency();
 
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.user) setUser(data.user);
+      })
+      .catch(() => {});
+  }, []);
+
   // ROI Calculator interactive state
   const [subscribers, setSubscribers] = useState(150);
   const [avgContractValue, setAvgContractValue] = useState(120);
@@ -38,6 +49,14 @@ export default function HomePage() {
   const calculatedARR = calculatedMRR * 12;
   const hoursSaved = Math.round(subscribers * 0.35);
 
+  const dashboardHref = user
+    ? user.role === "ADMIN"
+      ? "/admin"
+      : user.role === "STAFF"
+      ? "/app"
+      : "/portal"
+    : "/";
+
   return (
     <div className="min-h-screen flex flex-col justify-between selection:bg-emerald-100 selection:text-emerald-900">
       {/* =========================================================================
@@ -45,7 +64,11 @@ export default function HomePage() {
           ========================================================================= */}
       <header className="glass-panel sticky top-0 z-40 border-b border-emerald-500/15 px-6 py-3.5">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center cursor-pointer" title="BrightLoop">
+          <Link
+            href={dashboardHref}
+            className="flex items-center cursor-pointer"
+            title={user ? `Return to ${user.role} Dashboard` : "BrightLoop"}
+          >
             <img
               src="/logo.png"
               alt="BrightLoop"
@@ -56,20 +79,32 @@ export default function HomePage() {
           <div className="flex items-center gap-3">
             <CurrencySelector />
 
-            <Link
-              href="/login"
-              className="hidden sm:inline-flex px-4 py-2 text-xs font-semibold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50/60 transition rounded-xl"
-            >
-              Sign In
-            </Link>
+            {user ? (
+              <Link
+                href={dashboardHref}
+                className="px-4 py-2 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-md shadow-emerald-600/25 transition flex items-center gap-1.5"
+              >
+                Go to {user.role === "ADMIN" ? "Admin" : user.role === "STAFF" ? "Staff" : "Customer"} Console
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="hidden sm:inline-flex px-4 py-2 text-xs font-semibold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50/60 transition rounded-xl"
+                >
+                  Sign In
+                </Link>
 
-            <Link
-              href="/login"
-              className="px-4 py-2 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-md shadow-emerald-600/25 transition flex items-center gap-1.5"
-            >
-              Launch Platform
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
+                <Link
+                  href="/login"
+                  className="px-4 py-2 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-md shadow-emerald-600/25 transition flex items-center gap-1.5"
+                >
+                  Launch Platform
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </header>
