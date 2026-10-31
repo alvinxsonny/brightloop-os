@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
-import { Tag, Percent, Plus, CheckCircle2, AlertCircle, X, Shield, Calendar, DollarSign } from "lucide-react";
+import { Tag, Percent, Plus, CheckCircle2, AlertCircle, X, Shield } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
 export default function AdminRulesPage() {
@@ -12,7 +12,6 @@ export default function AdminRulesPage() {
   const [taxRules, setTaxRules] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Discount modal state
   const [showDiscountModal, setShowDiscountModal] = useState(false);
   const [dCode, setDCode] = useState("");
   const [dName, setDName] = useState("");
@@ -23,7 +22,6 @@ export default function AdminRulesPage() {
   const [dLimit, setDLimit] = useState("");
   const [dAppliesTo, setDAppliesTo] = useState("SUBSCRIPTION");
 
-  // Tax modal state
   const [showTaxModal, setShowTaxModal] = useState(false);
   const [tName, setTName] = useState("");
   const [tRate, setTRate] = useState("");
@@ -139,20 +137,20 @@ export default function AdminRulesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
       <Navbar user={user} />
 
       <main className="max-w-7xl mx-auto px-6 py-8 w-full flex-1">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-800">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-200">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-300 border border-purple-500/20 mb-2">
-              <Shield className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-50 text-purple-700 border border-purple-200 mb-2">
+              <Shield className="w-3.5 h-3.5 text-purple-600" />
               Admin Rule Engine
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
               Taxes & Discount Rules
             </h1>
-            <p className="text-sm text-slate-400 mt-1">
+            <p className="text-sm text-slate-500 mt-1">
               Admin-controlled automated calculation rules for billing runs, volume discounts, and GST/VAT.
             </p>
           </div>
@@ -161,7 +159,7 @@ export default function AdminRulesPage() {
             {tab === "discounts" ? (
               <button
                 onClick={() => setShowDiscountModal(true)}
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-sm shadow transition"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm shadow-xs transition cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
                 Add Discount Rule
@@ -169,7 +167,7 @@ export default function AdminRulesPage() {
             ) : (
               <button
                 onClick={() => setShowTaxModal(true)}
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-medium text-sm shadow transition"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-medium text-sm shadow-xs transition cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
                 Add Tax Rule
@@ -179,26 +177,25 @@ export default function AdminRulesPage() {
         </div>
 
         {message && (
-          <div className="mt-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-sm flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+          <div className="mt-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 flex-shrink-0 text-emerald-600" />
             <span>{message}</span>
           </div>
         )}
         {error && (
-          <div className="mt-4 p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-300 text-sm flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+          <div className="mt-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-sm flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 flex-shrink-0 text-rose-600" />
             <span>{error}</span>
           </div>
         )}
 
-        {/* Tab switch */}
-        <div className="mt-6 flex items-center gap-2 border-b border-slate-800 pb-3">
+        <div className="mt-6 flex items-center gap-2 border-b border-slate-200 pb-3">
           <button
             onClick={() => setTab("discounts")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 ${
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition flex items-center gap-2 cursor-pointer ${
               tab === "discounts"
-                ? "bg-indigo-600 text-white shadow"
-                : "text-slate-400 hover:text-white hover:bg-slate-800"
+                ? "bg-indigo-600 text-white shadow-xs"
+                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
             }`}
           >
             <Tag className="w-4 h-4" />
@@ -206,10 +203,10 @@ export default function AdminRulesPage() {
           </button>
           <button
             onClick={() => setTab("taxes")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 ${
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition flex items-center gap-2 cursor-pointer ${
               tab === "taxes"
-                ? "bg-indigo-600 text-white shadow"
-                : "text-slate-400 hover:text-white hover:bg-slate-800"
+                ? "bg-indigo-600 text-white shadow-xs"
+                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
             }`}
           >
             <Percent className="w-4 h-4" />
@@ -217,84 +214,82 @@ export default function AdminRulesPage() {
           </button>
         </div>
 
-        {/* DISCOUNTS TAB */}
         {tab === "discounts" && (
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {discountRules.map((disc) => (
               <div
                 key={disc.id}
-                className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition shadow-lg flex flex-col justify-between"
+                className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs hover:border-slate-300 transition flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="font-mono text-sm font-bold text-white bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded border border-indigo-500/30">
+                    <span className="font-mono text-xs font-bold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded border border-indigo-200">
                       {disc.code}
                     </span>
-                    <span className="text-base font-bold text-emerald-400">
+                    <span className="text-sm font-bold text-emerald-700">
                       {disc.type === "PERCENTAGE" ? `${disc.value}% OFF` : `$${disc.value} OFF`}
                     </span>
                   </div>
-                  <h3 className="text-base font-bold text-white mt-2">{disc.name}</h3>
+                  <h3 className="text-base font-semibold text-slate-900 mt-2">{disc.name}</h3>
 
-                  <div className="mt-4 pt-3 border-t border-slate-800/80 space-y-1.5 text-xs text-slate-300">
+                  <div className="mt-4 pt-3 border-t border-slate-100 space-y-1.5 text-xs text-slate-600">
                     <div className="flex justify-between">
-                      <span className="text-slate-500">Applies To:</span>
-                      <span className="font-medium text-white">{disc.appliesTo}</span>
+                      <span className="text-slate-400">Applies To:</span>
+                      <span className="font-medium text-slate-800">{disc.appliesTo}</span>
                     </div>
                     {disc.minQuantity && (
                       <div className="flex justify-between">
-                        <span className="text-slate-500">Min Quantity:</span>
-                        <span className="font-medium text-white">{disc.minQuantity} units</span>
+                        <span className="text-slate-400">Min Quantity:</span>
+                        <span className="font-medium text-slate-800">{disc.minQuantity} units</span>
                       </div>
                     )}
                     {disc.minPurchaseAmount && (
                       <div className="flex justify-between">
-                        <span className="text-slate-500">Min Spend:</span>
-                        <span className="font-medium text-white">${disc.minPurchaseAmount}</span>
+                        <span className="text-slate-400">Min Spend:</span>
+                        <span className="font-medium text-slate-800">${disc.minPurchaseAmount}</span>
                       </div>
                     )}
                     <div className="flex justify-between">
-                      <span className="text-slate-500">Usage Tracker:</span>
-                      <span className="font-medium text-indigo-300">
+                      <span className="text-slate-400">Usage Tracker:</span>
+                      <span className="font-medium text-indigo-700">
                         {disc.timesUsed} / {disc.usageLimit ? `${disc.usageLimit} max` : "unlimited"}
                       </span>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-800 text-[11px] text-slate-500 flex justify-between">
+                <div className="mt-4 pt-3 border-t border-slate-100 text-[11px] text-slate-500 flex justify-between">
                   <span>Auto-applied on billing day</span>
-                  <span className="text-emerald-400">Active</span>
+                  <span className="text-emerald-700 font-medium">Active</span>
                 </div>
               </div>
             ))}
           </div>
         )}
 
-        {/* TAX RULES TAB */}
         {tab === "taxes" && (
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {taxRules.map((tax) => (
               <div
                 key={tax.id}
-                className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition shadow-lg flex flex-col justify-between"
+                className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs hover:border-slate-300 transition flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-2xl font-black text-white">{tax.rate}%</span>
+                    <span className="text-2xl font-bold text-slate-900">{tax.rate}%</span>
                     {tax.isDefault && (
-                      <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                      <span className="text-[10px] font-medium uppercase px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
                         Default Rule
                       </span>
                     )}
                   </div>
-                  <h3 className="text-base font-bold text-white mt-1">{tax.name}</h3>
-                  {tax.description && <p className="text-xs text-slate-400 mt-1">{tax.description}</p>}
+                  <h3 className="text-base font-semibold text-slate-900 mt-1">{tax.name}</h3>
+                  {tax.description && <p className="text-xs text-slate-500 mt-1">{tax.description}</p>}
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-800 text-[11px] text-slate-500 flex justify-between">
+                <div className="mt-4 pt-3 border-t border-slate-100 text-[11px] text-slate-500 flex justify-between">
                   <span>Created {formatDate(tax.createdAt)}</span>
-                  <span className="text-emerald-400">Active</span>
+                  <span className="text-emerald-700 font-medium">Active</span>
                 </div>
               </div>
             ))}
@@ -302,60 +297,59 @@ export default function AdminRulesPage() {
         )}
       </main>
 
-      {/* CREATE DISCOUNT MODAL */}
       {showDiscountModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs">
+          <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-lg p-6 shadow-xl relative">
             <button
               onClick={() => setShowDiscountModal(false)}
-              className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition"
+              className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
 
-            <h3 className="text-lg font-bold text-white mb-1">Create Discount Rule</h3>
-            <p className="text-xs text-slate-400 mb-4">Set percentage/fixed rules with quantity thresholds</p>
+            <h3 className="text-lg font-bold text-slate-900 mb-1">Create Discount Rule</h3>
+            <p className="text-xs text-slate-500 mb-4">Set percentage/fixed rules with quantity thresholds</p>
 
             <form onSubmit={handleCreateDiscount} className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Code</label>
+                  <label className="block text-xs font-semibold uppercase text-slate-700 mb-1">Code</label>
                   <input
                     type="text"
                     required
                     value={dCode}
                     onChange={(e) => setDCode(e.target.value)}
                     placeholder="e.g. SEATS20"
-                    className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs font-mono uppercase focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-xs font-mono uppercase focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 transition"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Name</label>
+                  <label className="block text-xs font-semibold uppercase text-slate-700 mb-1">Name</label>
                   <input
                     type="text"
                     required
                     value={dName}
                     onChange={(e) => setDName(e.target.value)}
                     placeholder="e.g. Volume Seat Discount"
-                    className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-xs focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 transition"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Type</label>
+                  <label className="block text-xs font-semibold uppercase text-slate-700 mb-1">Type</label>
                   <select
                     value={dType}
                     onChange={(e) => setDType(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-xs focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 transition"
                   >
                     <option value="PERCENTAGE">Percentage (%)</option>
                     <option value="FIXED">Fixed Amount ($)</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Value</label>
+                  <label className="block text-xs font-semibold uppercase text-slate-700 mb-1">Value</label>
                   <input
                     type="number"
                     step="0.01"
@@ -363,46 +357,46 @@ export default function AdminRulesPage() {
                     value={dValue}
                     onChange={(e) => setDValue(e.target.value)}
                     placeholder="e.g. 20 (for 20%)"
-                    className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-xs focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 transition"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Min Quantity Seats</label>
+                  <label className="block text-xs font-semibold uppercase text-slate-700 mb-1">Min Quantity Seats</label>
                   <input
                     type="number"
                     value={dMinQty}
                     onChange={(e) => setDMinQty(e.target.value)}
                     placeholder="e.g. 5"
-                    className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-xs focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 transition"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Usage Limit (Max Uses)</label>
+                  <label className="block text-xs font-semibold uppercase text-slate-700 mb-1">Usage Limit</label>
                   <input
                     type="number"
                     value={dLimit}
                     onChange={(e) => setDLimit(e.target.value)}
-                    placeholder="e.g. 50 (or leave empty)"
-                    className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs"
+                    placeholder="e.g. 50"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-xs focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 transition"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200">
                 <button
                   type="button"
                   onClick={() => setShowDiscountModal(false)}
-                  className="px-4 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 text-sm"
+                  className="px-4 py-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 text-sm transition cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-sm transition shadow disabled:opacity-50"
+                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm transition shadow-xs disabled:opacity-50 cursor-pointer"
                 >
                   {saving ? "Saving..." : "Save Discount Rule"}
                 </button>
@@ -412,35 +406,34 @@ export default function AdminRulesPage() {
         </div>
       )}
 
-      {/* CREATE TAX MODAL */}
       {showTaxModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs">
+          <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-lg p-6 shadow-xl relative">
             <button
               onClick={() => setShowTaxModal(false)}
-              className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition"
+              className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
 
-            <h3 className="text-lg font-bold text-white mb-1">Create Tax Rule</h3>
-            <p className="text-xs text-slate-400 mb-4">Set percentage rate for recurring billing calculation</p>
+            <h3 className="text-lg font-bold text-slate-900 mb-1">Create Tax Rule</h3>
+            <p className="text-xs text-slate-500 mb-4">Set percentage rate for recurring billing calculation</p>
 
             <form onSubmit={handleCreateTax} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Tax Rule Name</label>
+                <label className="block text-xs font-semibold uppercase text-slate-700 mb-1">Tax Rule Name</label>
                 <input
                   type="text"
                   required
                   value={tName}
                   onChange={(e) => setTName(e.target.value)}
                   placeholder="e.g. Standard GST (18%)"
-                  className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Rate (%)</label>
+                <label className="block text-xs font-semibold uppercase text-slate-700 mb-1">Rate (%)</label>
                 <input
                   type="number"
                   step="0.01"
@@ -448,43 +441,43 @@ export default function AdminRulesPage() {
                   value={tRate}
                   onChange={(e) => setTRate(e.target.value)}
                   placeholder="18.0"
-                  className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Description</label>
+                <label className="block text-xs font-semibold uppercase text-slate-700 mb-1">Description</label>
                 <input
                   type="text"
                   value={tDescription}
                   onChange={(e) => setTDescription(e.target.value)}
-                  placeholder="Applies to all domestic software subscriptions"
-                  className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs"
+                  placeholder="Applies to all software subscriptions"
+                  className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 transition"
                 />
               </div>
 
-              <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-300 pt-1">
+              <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-600 pt-1">
                 <input
                   type="checkbox"
                   checked={tDefault}
                   onChange={(e) => setTDefault(e.target.checked)}
-                  className="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0"
+                  className="rounded bg-slate-100 border-slate-300 text-indigo-600 focus:ring-0"
                 />
                 <span>Set as default tax rule for all new subscriptions</span>
               </label>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200">
                 <button
                   type="button"
                   onClick={() => setShowTaxModal(false)}
-                  className="px-4 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 text-sm"
+                  className="px-4 py-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 text-sm transition cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-medium text-sm transition shadow disabled:opacity-50"
+                  className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-medium text-sm transition shadow-xs disabled:opacity-50 cursor-pointer"
                 >
                   {saving ? "Saving..." : "Save Tax Rule"}
                 </button>
@@ -496,4 +489,3 @@ export default function AdminRulesPage() {
     </div>
   );
 }
-

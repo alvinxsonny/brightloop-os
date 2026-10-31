@@ -46,7 +46,6 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       message: "Password reset link generated successfully.",
-      // For hackathon judge convenience without real SMTP setup:
       resetUrl,
       token,
     });

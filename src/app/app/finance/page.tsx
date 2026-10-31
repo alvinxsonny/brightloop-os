@@ -12,16 +12,11 @@ import {
   Download,
   RefreshCw,
   Search,
-  Filter,
   CheckCircle2,
   Clock,
-  ArrowRight,
-  ShieldAlert,
   PieChart as PieChartIcon,
-  Calendar,
   CreditCard,
   Building,
-  UserCheck,
   Zap,
 } from "lucide-react";
 import {
@@ -34,15 +29,10 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
-  PieChart,
-  Pie,
   Cell,
 } from "recharts";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { useToast } from "@/components/ToastProvider";
-
-const CHART_COLORS = ["#6366f1", "#06b6d4", "#10b981", "#f59e0b", "#ec4899", "#8b5cf6"];
 
 export default function FinanceDashboardPage() {
   const { toast } = useToast();
@@ -133,7 +123,7 @@ export default function FinanceDashboardPage() {
         setActionSuccess(`Payment of ${formatCurrency(parseFloat(paymentAmount))} recorded for ${selectedInvoiceForPayment.invoiceNumber}!`);
         setTimeout(() => setActionSuccess(null), 4000);
         setPaymentModalOpen(false);
-        fetchAnalytics(); // Refresh instantly
+        fetchAnalytics();
       }
     } catch (err: any) {
       console.error(err);
@@ -143,7 +133,6 @@ export default function FinanceDashboardPage() {
     }
   };
 
-  // CSV Export utility
   const handleExportCSV = () => {
     if (!data?.invoiceLedger) return;
 
@@ -182,70 +171,65 @@ export default function FinanceDashboardPage() {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `brightloop-finance-ledger-${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute("download", `brightloop-receivables-${new Date().toISOString().split("T")[0]}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    toast.success("Finance ledger exported as CSV", "Export Ready");
   };
 
-  // Filtered invoices
+  const distinctPlans = useMemo(() => {
+    if (!data?.invoiceLedger) return [];
+    const set = new Set<string>();
+    data.invoiceLedger.forEach((inv: any) => {
+      if (inv.planName) set.add(inv.planName);
+    });
+    return Array.from(set);
+  }, [data]);
+
   const filteredInvoices = useMemo(() => {
     if (!data?.invoiceLedger) return [];
+
     return data.invoiceLedger.filter((inv: any) => {
-      // Tab filter
       if (activeTab === "OVERDUE" && !inv.isOverdue) return false;
-      if (activeTab === "OUTSTANDING" && (inv.status === "PAID" || inv.balanceDue <= 0)) return false;
+      if (activeTab === "OUTSTANDING" && inv.balanceDue <= 0) return false;
       if (activeTab === "PAID" && inv.status !== "PAID") return false;
 
-      // Plan filter
       if (selectedPlan !== "ALL" && inv.planName !== selectedPlan) return false;
 
-      // Search query
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
-        const matchNumber = inv.invoiceNumber.toLowerCase().includes(q);
-        const matchCustomer = inv.customerName.toLowerCase().includes(q);
-        const matchCompany = inv.customerCompany.toLowerCase().includes(q);
-        if (!matchNumber && !matchCustomer && !matchCompany) return false;
+        const numMatch = inv.invoiceNumber?.toLowerCase().includes(q);
+        const nameMatch = inv.customerName?.toLowerCase().includes(q);
+        const compMatch = inv.customerCompany?.toLowerCase().includes(q);
+        if (!numMatch && !nameMatch && !compMatch) return false;
       }
 
       return true;
     });
   }, [data, activeTab, selectedPlan, searchQuery]);
 
-  // Distinct plans for filter dropdown
-  const distinctPlans = useMemo(() => {
-    if (!data?.invoiceLedger) return [];
-    const set = new Set<string>();
-    data.invoiceLedger.forEach((i: any) => {
-      if (i.planName) set.add(i.planName);
-    });
-    return Array.from(set);
-  }, [data]);
-
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
       <Navbar user={user} />
 
       <main className="max-w-7xl mx-auto px-6 py-8 w-full flex-1">
         {/* Header Bar */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 mb-2">
-              <BarChart3 className="w-3.5 h-3.5 text-emerald-400" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 mb-2">
+              <BarChart3 className="w-3.5 h-3.5 text-emerald-600" />
               <span>Executive Finance Console</span>
-              <span className="text-slate-500">•</span>
-              <span className="flex items-center gap-1 text-sky-400">
-                <Zap className="w-3 h-3 text-amber-400 fill-amber-400" />
+              <span className="text-slate-300">•</span>
+              <span className="flex items-center gap-1 text-slate-700">
+                <Zap className="w-3 h-3 text-amber-500 fill-amber-500" />
                 Response Time:{" "}
                 {fetchLatency ? `${fetchLatency}ms` : data?.performance?.executionTimeMs ? `${data.performance.executionTimeMs}ms` : "< 40ms"}
               </span>
             </div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
+            <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 flex items-center gap-3">
               Financial Intelligence & Receivables
             </h1>
-            <p className="text-sm text-slate-400 mt-1">
+            <p className="text-sm text-slate-500 mt-1">
               Autonomous recurring revenue reporting, overdue collection tracking, and sub-2-second aggregation engine.
             </p>
           </div>
@@ -254,16 +238,16 @@ export default function FinanceDashboardPage() {
             <button
               onClick={fetchAnalytics}
               disabled={loading}
-              className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white text-xs font-semibold transition flex items-center gap-2 disabled:opacity-50"
+              className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 hover:text-slate-900 text-xs font-semibold transition flex items-center gap-2 disabled:opacity-50 shadow-sm"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin text-indigo-400" : ""}`} />
+              <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin text-indigo-600" : ""}`} />
               Refresh Analytics
             </button>
 
             <button
               onClick={handleExportCSV}
               disabled={!data?.invoiceLedger?.length}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-semibold transition shadow-lg shadow-emerald-600/20 flex items-center gap-2"
+              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition shadow-sm flex items-center gap-2"
             >
               <Download className="w-3.5 h-3.5" />
               Export CSV Ledger
@@ -273,28 +257,28 @@ export default function FinanceDashboardPage() {
 
         {/* Success toast */}
         {actionSuccess && (
-          <div className="mb-6 p-4 rounded-xl bg-emerald-950/80 border border-emerald-500/50 text-emerald-200 text-sm flex items-center gap-3 shadow-lg animate-fadeIn">
-            <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+          <div className="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center gap-3 shadow-sm">
+            <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
             <span>{actionSuccess}</span>
           </div>
         )}
 
-        {/* Benchmark Guarantee Callout */}
-        <div className="p-4 rounded-xl bg-gradient-to-r from-indigo-950/70 via-slate-900 to-emerald-950/60 border border-indigo-500/30 mb-8 flex flex-wrap items-center justify-between gap-4 text-xs">
+        {/* Performance Callout */}
+        <div className="p-4 rounded-xl bg-white border border-slate-200 mb-8 flex flex-wrap items-center justify-between gap-4 text-xs shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-mono font-bold">
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-mono font-bold">
               ⚡
             </div>
             <div>
-              <span className="font-semibold text-white">Sub-2-Second Finance Performance Target: </span>
-              <span className="text-emerald-300 font-mono font-bold">
+              <span className="font-semibold text-slate-900">Sub-2-Second Finance Performance Target: </span>
+              <span className="text-emerald-600 font-mono font-bold">
                 {fetchLatency ? `${fetchLatency}ms` : "Active"}
               </span>{" "}
-              <span className="text-slate-400">(Benchmark: &lt; 2000ms SLA guaranteed across thousands of contracts)</span>
+              <span className="text-slate-500">(Benchmark: &lt; 2000ms SLA guaranteed across all contracts)</span>
             </div>
           </div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-medium">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-medium">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
             SLA Met • 0.0s Lag
           </div>
         </div>
@@ -302,96 +286,93 @@ export default function FinanceDashboardPage() {
         {/* Top Executive KPI Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
           {/* Card 1: MRR & ARR */}
-          <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-900/90 to-indigo-950/40 border border-slate-800 shadow-xl relative overflow-hidden group hover:border-indigo-500/40 transition">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/5 rounded-full blur-2xl group-hover:bg-indigo-500/10 transition" />
-            <div className="flex items-center justify-between text-slate-400 mb-2">
-              <span className="text-xs uppercase font-bold tracking-wider text-indigo-300">Monthly Recurring (MRR)</span>
-              <div className="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
+          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm relative overflow-hidden">
+            <div className="flex items-center justify-between text-slate-500 mb-2">
+              <span className="text-xs uppercase font-bold tracking-wider text-indigo-600">Monthly Recurring (MRR)</span>
+              <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
                 <DollarSign className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-3xl font-black text-white tracking-tight">
+            <div className="text-3xl font-black text-slate-900 tracking-tight">
               {formatCurrency(data?.kpis?.mrr || 0)}
             </div>
-            <div className="flex items-center justify-between text-xs mt-3 pt-3 border-t border-slate-800/80">
-              <span className="text-slate-400">Annual Run-rate (ARR):</span>
-              <span className="text-indigo-400 font-semibold font-mono">
+            <div className="flex items-center justify-between text-xs mt-3 pt-3 border-t border-slate-100">
+              <span className="text-slate-500">Annual Run-rate (ARR):</span>
+              <span className="text-indigo-600 font-semibold font-mono">
                 {formatCurrency(data?.kpis?.arr || 0)}
               </span>
             </div>
           </div>
 
           {/* Card 2: Active Subscriptions & Retention */}
-          <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-900/90 to-sky-950/40 border border-slate-800 shadow-xl relative overflow-hidden group hover:border-sky-500/40 transition">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-sky-500/5 rounded-full blur-2xl group-hover:bg-sky-500/10 transition" />
-            <div className="flex items-center justify-between text-slate-400 mb-2">
-              <span className="text-xs uppercase font-bold tracking-wider text-sky-300">Active Subscriptions</span>
-              <div className="w-8 h-8 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center">
+          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm relative overflow-hidden">
+            <div className="flex items-center justify-between text-slate-500 mb-2">
+              <span className="text-xs uppercase font-bold tracking-wider text-sky-600">Active Subscriptions</span>
+              <div className="w-8 h-8 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center">
                 <TrendingUp className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-3xl font-black text-white tracking-tight flex items-baseline gap-2">
+            <div className="text-3xl font-black text-slate-900 tracking-tight flex items-baseline gap-2">
               <span>{data?.kpis?.activeSubscriptions ?? 0}</span>
-              <span className="text-xs text-slate-400 font-normal">
+              <span className="text-xs text-slate-500 font-normal">
                 / {data?.kpis?.totalSubscriptions ?? 0} total
               </span>
             </div>
-            <div className="flex items-center justify-between text-xs mt-3 pt-3 border-t border-slate-800/80">
-              <span className="text-slate-400">Pause Rate: {data?.kpis?.pauseRate ?? 0}%</span>
-              <span className="text-emerald-400 font-medium">
+            <div className="flex items-center justify-between text-xs mt-3 pt-3 border-t border-slate-100">
+              <span className="text-slate-500">Pause Rate: {data?.kpis?.pauseRate ?? 0}%</span>
+              <span className="text-emerald-600 font-medium">
                 Churn: {data?.kpis?.churnRate ?? 0}%
               </span>
             </div>
           </div>
 
           {/* Card 3: Total Collected vs Receivables */}
-          <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-900/90 to-emerald-950/40 border border-slate-800 shadow-xl relative overflow-hidden group hover:border-emerald-500/40 transition">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition" />
-            <div className="flex items-center justify-between text-slate-400 mb-2">
-              <span className="text-xs uppercase font-bold tracking-wider text-emerald-300">Cash Collected</span>
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm relative overflow-hidden">
+            <div className="flex items-center justify-between text-slate-500 mb-2">
+              <span className="text-xs uppercase font-bold tracking-wider text-emerald-600">Cash Collected</span>
+              <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
                 <CheckCircle2 className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-3xl font-black text-emerald-400 tracking-tight">
+            <div className="text-3xl font-black text-emerald-600 tracking-tight">
               {formatCurrency(data?.kpis?.totalCollected || 0)}
             </div>
-            <div className="flex items-center justify-between text-xs mt-3 pt-3 border-t border-slate-800/80">
-              <span className="text-slate-400">Total Invoiced:</span>
-              <span className="text-slate-200 font-semibold font-mono">
+            <div className="flex items-center justify-between text-xs mt-3 pt-3 border-t border-slate-100">
+              <span className="text-slate-500">Total Invoiced:</span>
+              <span className="text-slate-800 font-semibold font-mono">
                 {formatCurrency(data?.kpis?.totalInvoiced || 0)}
               </span>
             </div>
           </div>
 
           {/* Card 4: Overdue Invoices Alert */}
-          <div className={`p-5 rounded-2xl border shadow-xl relative overflow-hidden group transition ${
+          <div className={`p-5 rounded-2xl border shadow-sm relative overflow-hidden transition ${
             (data?.kpis?.overdueCount || 0) > 0
-              ? "bg-gradient-to-br from-rose-950/50 to-slate-900 border-rose-500/40"
-              : "bg-slate-900/90 border-slate-800"
+              ? "bg-rose-50/50 border-rose-200"
+              : "bg-white border-slate-200"
           }`}>
-            <div className="flex items-center justify-between text-slate-400 mb-2">
+            <div className="flex items-center justify-between text-slate-500 mb-2">
               <span className={`text-xs uppercase font-bold tracking-wider ${
-                (data?.kpis?.overdueCount || 0) > 0 ? "text-rose-300" : "text-slate-400"
+                (data?.kpis?.overdueCount || 0) > 0 ? "text-rose-600" : "text-slate-500"
               }`}>
                 Overdue Receivables
               </span>
               <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                (data?.kpis?.overdueCount || 0) > 0 ? "bg-rose-500/20 text-rose-400" : "bg-slate-800 text-slate-400"
+                (data?.kpis?.overdueCount || 0) > 0 ? "bg-rose-100 text-rose-600" : "bg-slate-100 text-slate-500"
               }`}>
                 <AlertTriangle className="w-4 h-4" />
               </div>
             </div>
             <div className={`text-3xl font-black tracking-tight ${
-              (data?.kpis?.overdueCount || 0) > 0 ? "text-rose-400" : "text-white"
+              (data?.kpis?.overdueCount || 0) > 0 ? "text-rose-600" : "text-slate-900"
             }`}>
               {formatCurrency(data?.kpis?.overdueAmount || 0)}
             </div>
-            <div className="flex items-center justify-between text-xs mt-3 pt-3 border-t border-slate-800/80">
-              <span className="text-slate-400">Delinquent Invoices:</span>
+            <div className="flex items-center justify-between text-xs mt-3 pt-3 border-t border-slate-100">
+              <span className="text-slate-500">Delinquent Invoices:</span>
               <button
                 onClick={() => setActiveTab("OVERDUE")}
-                className="text-rose-400 hover:text-rose-300 font-bold underline cursor-pointer"
+                className="text-rose-600 hover:text-rose-700 font-bold underline cursor-pointer"
               >
                 {data?.kpis?.overdueCount || 0} Invoices (View)
               </button>
@@ -401,24 +382,24 @@ export default function FinanceDashboardPage() {
 
         {/* Charts Row */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          {/* Chart 1: Revenue Performance Trend (Area Chart) */}
-          <div className="lg:col-span-2 p-6 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-lg flex flex-col justify-between">
+          {/* Chart 1: Revenue Performance Trend */}
+          <div className="lg:col-span-2 p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-indigo-400" />
+                <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-indigo-600" />
                   Monthly Billing vs. Cash Collections (Last 6 Months)
                 </h3>
-                <p className="text-xs text-slate-400 mt-0.5">
+                <p className="text-xs text-slate-500 mt-0.5">
                   Historical comparison of generated invoices against realized payments
                 </p>
               </div>
               <div className="flex items-center gap-3 text-xs">
-                <span className="flex items-center gap-1.5 text-indigo-300">
-                  <span className="w-3 h-3 rounded-full bg-indigo-500" /> Invoiced
+                <span className="flex items-center gap-1.5 text-indigo-700 font-medium">
+                  <span className="w-3 h-3 rounded-full bg-indigo-600" /> Invoiced
                 </span>
-                <span className="flex items-center gap-1.5 text-emerald-300">
-                  <span className="w-3 h-3 rounded-full bg-emerald-500" /> Collected
+                <span className="flex items-center gap-1.5 text-emerald-700 font-medium">
+                  <span className="w-3 h-3 rounded-full bg-emerald-600" /> Collected
                 </span>
               </div>
             </div>
@@ -429,19 +410,19 @@ export default function FinanceDashboardPage() {
                   <AreaChart data={data.monthlyTrend} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <defs>
                       <linearGradient id="colorInvoiced" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.4} />
+                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.2} />
                         <stop offset="95%" stopColor="#6366f1" stopOpacity={0.0} />
                       </linearGradient>
                       <linearGradient id="colorCollected" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
+                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.2} />
                         <stop offset="95%" stopColor="#10b981" stopOpacity={0.0} />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                    <XAxis dataKey="month" stroke="#64748b" tick={{ fontSize: 11 }} />
-                    <YAxis stroke="#64748b" tick={{ fontSize: 11 }} tickFormatter={(val) => `$${val}`} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                    <XAxis dataKey="month" stroke="#94a3b8" tick={{ fontSize: 11 }} />
+                    <YAxis stroke="#94a3b8" tick={{ fontSize: 11 }} tickFormatter={(val) => `$${val}`} />
                     <Tooltip
-                      contentStyle={{ backgroundColor: "#0f172a", borderColor: "#334155", borderRadius: "0.75rem", fontSize: "12px" }}
+                      contentStyle={{ backgroundColor: "#ffffff", borderColor: "#e2e8f0", borderRadius: "0.75rem", fontSize: "12px", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" }}
                       formatter={(val: any) => formatCurrency(Number(val))}
                     />
                     <Area type="monotone" dataKey="invoiced" stroke="#6366f1" strokeWidth={2} fillOpacity={1} fill="url(#colorInvoiced)" />
@@ -449,7 +430,7 @@ export default function FinanceDashboardPage() {
                   </AreaChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="flex items-center justify-center h-full text-slate-500 text-xs">
+                <div className="flex items-center justify-center h-full text-slate-400 text-xs">
                   Loading trend data...
                 </div>
               )}
@@ -457,13 +438,13 @@ export default function FinanceDashboardPage() {
           </div>
 
           {/* Chart 2: Receivables Aging Breakdown */}
-          <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-lg flex flex-col justify-between">
+          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between">
             <div className="mb-4">
-              <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <Clock className="w-4 h-4 text-amber-400" />
+              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                <Clock className="w-4 h-4 text-amber-500" />
                 Receivables Aging Matrix
               </h3>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-slate-500 mt-0.5">
                 Outstanding balances grouped by overdue days
               </p>
             </div>
@@ -472,11 +453,11 @@ export default function FinanceDashboardPage() {
               {data?.agingBuckets ? (
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={data.agingBuckets} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                    <XAxis dataKey="label" stroke="#64748b" tick={{ fontSize: 10 }} />
-                    <YAxis stroke="#64748b" tick={{ fontSize: 10 }} tickFormatter={(val) => `$${val}`} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                    <XAxis dataKey="label" stroke="#94a3b8" tick={{ fontSize: 10 }} />
+                    <YAxis stroke="#94a3b8" tick={{ fontSize: 10 }} tickFormatter={(val) => `$${val}`} />
                     <Tooltip
-                      contentStyle={{ backgroundColor: "#0f172a", borderColor: "#334155", borderRadius: "0.75rem", fontSize: "12px" }}
+                      contentStyle={{ backgroundColor: "#ffffff", borderColor: "#e2e8f0", borderRadius: "0.75rem", fontSize: "12px", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" }}
                       formatter={(val: any) => [formatCurrency(Number(val)), "Overdue Balance"]}
                     />
                     <Bar dataKey="amount" radius={[6, 6, 0, 0]}>
@@ -488,7 +469,7 @@ export default function FinanceDashboardPage() {
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="flex items-center justify-center h-full text-slate-500 text-xs">
+                <div className="flex items-center justify-center h-full text-slate-400 text-xs">
                   Loading aging data...
                 </div>
               )}
@@ -499,42 +480,42 @@ export default function FinanceDashboardPage() {
         {/* Plan Revenue & Customer LTV Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* Plan Breakdown */}
-          <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-lg">
-            <h3 className="text-base font-bold text-white mb-3 flex items-center gap-2">
-              <PieChartIcon className="w-4 h-4 text-sky-400" />
+          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
+            <h3 className="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
+              <PieChartIcon className="w-4 h-4 text-sky-600" />
               Plan MRR Distribution
             </h3>
             <div className="space-y-3 mt-4">
               {data?.planDistribution?.map((p: any, idx: number) => (
-                <div key={idx} className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 flex items-center justify-between">
+                <div key={idx} className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
                   <div>
-                    <div className="text-sm font-semibold text-white">{p.name}</div>
-                    <div className="text-xs text-slate-400">
+                    <div className="text-sm font-semibold text-slate-900">{p.name}</div>
+                    <div className="text-xs text-slate-500">
                       {p.frequency} • {p.activeSubscribers} active subscribers
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm font-bold text-emerald-400">{formatCurrency(p.mrr)}/mo</div>
-                    <div className="text-[10px] text-slate-500">MRR Share</div>
+                    <div className="text-sm font-bold text-emerald-600">{formatCurrency(p.mrr)}/mo</div>
+                    <div className="text-[10px] text-slate-400">MRR Share</div>
                   </div>
                 </div>
               ))}
               {(!data?.planDistribution || data.planDistribution.length === 0) && (
-                <div className="text-xs text-slate-500 text-center py-6">No plans configured yet.</div>
+                <div className="text-xs text-slate-400 text-center py-6">No plans configured yet.</div>
               )}
             </div>
           </div>
 
           {/* Top Customers by Value */}
-          <div className="lg:col-span-2 p-6 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-lg flex flex-col justify-between">
+          <div className="lg:col-span-2 p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h3 className="text-base font-bold text-white flex items-center gap-2">
-                    <Building className="w-4 h-4 text-purple-400" />
+                  <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                    <Building className="w-4 h-4 text-indigo-600" />
                     Top Customer Accounts (Lifetime Value & Health)
                   </h3>
-                  <p className="text-xs text-slate-400 mt-0.5">
+                  <p className="text-xs text-slate-500 mt-0.5">
                     Account-level breakdown of billed revenue, payments collected, and open balance
                   </p>
                 </div>
@@ -542,7 +523,7 @@ export default function FinanceDashboardPage() {
 
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-950/60 text-slate-400 font-semibold border-b border-slate-800">
+                  <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
                     <tr>
                       <th className="py-2.5 px-3">Customer / Company</th>
                       <th className="py-2.5 px-3">Active Subs</th>
@@ -552,32 +533,32 @@ export default function FinanceDashboardPage() {
                       <th className="py-2.5 px-3">Account Standing</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/60">
+                  <tbody className="divide-y divide-slate-100">
                     {data?.customerLedger?.slice(0, 5).map((c: any) => (
-                      <tr key={c.id} className="hover:bg-slate-800/40 transition">
+                      <tr key={c.id} className="hover:bg-slate-50/70 transition">
                         <td className="py-3 px-3">
-                          <div className="font-semibold text-white">{c.name}</div>
-                          <div className="text-slate-400 text-[11px]">{c.company}</div>
+                          <div className="font-semibold text-slate-900">{c.name}</div>
+                          <div className="text-slate-500 text-[11px]">{c.company}</div>
                         </td>
                         <td className="py-3 px-3">
-                          <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono">
+                          <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 font-mono">
                             {c.activeSubscriptions}
                           </span>
                         </td>
-                        <td className="py-3 px-3 font-mono text-slate-300">{formatCurrency(c.totalInvoiced)}</td>
-                        <td className="py-3 px-3 font-mono font-semibold text-emerald-400">{formatCurrency(c.totalPaid)}</td>
+                        <td className="py-3 px-3 font-mono text-slate-700">{formatCurrency(c.totalInvoiced)}</td>
+                        <td className="py-3 px-3 font-mono font-semibold text-emerald-600">{formatCurrency(c.totalPaid)}</td>
                         <td className="py-3 px-3 font-mono font-semibold">
-                          <span className={c.balanceDue > 0 ? "text-rose-400" : "text-slate-400"}>
+                          <span className={c.balanceDue > 0 ? "text-rose-600" : "text-slate-400"}>
                             {formatCurrency(c.balanceDue)}
                           </span>
                         </td>
                         <td className="py-3 px-3">
                           {c.balanceDue > 0 ? (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
                               Receivable Pending
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                               Good Standing
                             </span>
                           )}
@@ -592,24 +573,24 @@ export default function FinanceDashboardPage() {
         </div>
 
         {/* Filterable Financial Invoices Ledger */}
-        <div className="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl mb-12">
+        <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm mb-12">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
             <div>
-              <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                <Receipt className="w-5 h-5 text-indigo-400" />
+              <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <Receipt className="w-5 h-5 text-indigo-600" />
                 Comprehensive Receivables & Invoices Ledger
               </h3>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-slate-500 mt-1">
                 Filter by aging status, plan, customer name, and record instant receivables
               </p>
             </div>
 
             {/* Tabs */}
-            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-950 border border-slate-800">
+            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-100 border border-slate-200">
               <button
                 onClick={() => setActiveTab("ALL")}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
-                  activeTab === "ALL" ? "bg-indigo-600 text-white shadow" : "text-slate-400 hover:text-white"
+                  activeTab === "ALL" ? "bg-white text-slate-900 shadow-sm" : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 All ({data?.invoiceLedger?.length || 0})
@@ -618,8 +599,8 @@ export default function FinanceDashboardPage() {
                 onClick={() => setActiveTab("OVERDUE")}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 ${
                   activeTab === "OVERDUE"
-                    ? "bg-rose-600 text-white shadow"
-                    : "text-rose-400 hover:text-rose-300"
+                    ? "bg-rose-600 text-white shadow-sm"
+                    : "text-rose-600 hover:text-rose-700"
                 }`}
               >
                 <AlertTriangle className="w-3.5 h-3.5" />
@@ -628,7 +609,7 @@ export default function FinanceDashboardPage() {
               <button
                 onClick={() => setActiveTab("OUTSTANDING")}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
-                  activeTab === "OUTSTANDING" ? "bg-amber-600 text-white shadow" : "text-slate-400 hover:text-white"
+                  activeTab === "OUTSTANDING" ? "bg-amber-600 text-white shadow-sm" : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 Outstanding
@@ -636,7 +617,7 @@ export default function FinanceDashboardPage() {
               <button
                 onClick={() => setActiveTab("PAID")}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
-                  activeTab === "PAID" ? "bg-emerald-600 text-white shadow" : "text-slate-400 hover:text-white"
+                  activeTab === "PAID" ? "bg-emerald-600 text-white shadow-sm" : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 Paid
@@ -647,13 +628,13 @@ export default function FinanceDashboardPage() {
           {/* Search & Filters */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
             <div className="relative sm:col-span-2">
-              <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-500" />
+              <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
               <input
                 type="text"
                 placeholder="Search invoice number, customer name, or company..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-500"
               />
             </div>
 
@@ -661,7 +642,7 @@ export default function FinanceDashboardPage() {
               <select
                 value={selectedPlan}
                 onChange={(e) => setSelectedPlan(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 focus:outline-none focus:border-indigo-500"
               >
                 <option value="ALL">All Plans & Contracts</option>
                 {distinctPlans.map((p) => (
@@ -674,9 +655,9 @@ export default function FinanceDashboardPage() {
           </div>
 
           {/* Table */}
-          <div className="overflow-x-auto rounded-xl border border-slate-800">
+          <div className="overflow-x-auto rounded-xl border border-slate-200">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-950 text-slate-400 font-semibold border-b border-slate-800">
+              <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
                 <tr>
                   <th className="py-3 px-4">Invoice #</th>
                   <th className="py-3 px-4">Customer & Account</th>
@@ -688,55 +669,55 @@ export default function FinanceDashboardPage() {
                   <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/70 bg-slate-900/40">
+              <tbody className="divide-y divide-slate-100 bg-white">
                 {filteredInvoices.map((inv: any) => {
                   return (
-                    <tr key={inv.id} className="hover:bg-slate-800/50 transition">
-                      <td className="py-3.5 px-4 font-mono font-bold text-white">
-                        <Link href={`/app/invoices/${inv.id}`} className="hover:text-indigo-400 transition underline">
+                    <tr key={inv.id} className="hover:bg-slate-50/70 transition">
+                      <td className="py-3.5 px-4 font-mono font-bold text-slate-900">
+                        <Link href={`/app/invoices/${inv.id}`} className="hover:text-indigo-600 transition underline">
                           {inv.invoiceNumber}
                         </Link>
                       </td>
                       <td className="py-3.5 px-4">
-                        <div className="font-semibold text-white">{inv.customerName}</div>
-                        <div className="text-slate-400 text-[11px]">{inv.customerCompany}</div>
+                        <div className="font-semibold text-slate-900">{inv.customerName}</div>
+                        <div className="text-slate-500 text-[11px]">{inv.customerCompany}</div>
                       </td>
-                      <td className="py-3.5 px-4 text-slate-300">
-                        <span className="px-2 py-0.5 rounded-md bg-slate-800 border border-slate-700/60 text-[11px]">
+                      <td className="py-3.5 px-4 text-slate-700">
+                        <span className="px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200 text-[11px]">
                           {inv.planName}
                         </span>
                       </td>
                       <td className="py-3.5 px-4">
-                        <div className="text-slate-300">{formatDate(inv.issueDate)}</div>
-                        <div className={`text-[11px] ${inv.isOverdue ? "text-rose-400 font-bold" : "text-slate-500"}`}>
+                        <div className="text-slate-700">{formatDate(inv.issueDate)}</div>
+                        <div className={`text-[11px] ${inv.isOverdue ? "text-rose-600 font-bold" : "text-slate-500"}`}>
                           Due: {formatDate(inv.dueDate)}
                         </div>
                       </td>
-                      <td className="py-3.5 px-4 font-mono font-semibold text-slate-200">
+                      <td className="py-3.5 px-4 font-mono font-semibold text-slate-900">
                         {formatCurrency(inv.totalAmount)}
                       </td>
                       <td className="py-3.5 px-4 font-mono font-bold">
-                        <span className={inv.balanceDue > 0 ? (inv.isOverdue ? "text-rose-400" : "text-amber-400") : "text-emerald-400"}>
+                        <span className={inv.balanceDue > 0 ? (inv.isOverdue ? "text-rose-600" : "text-amber-600") : "text-emerald-600"}>
                           {formatCurrency(inv.balanceDue)}
                         </span>
                       </td>
                       <td className="py-3.5 px-4">
                         {inv.isOverdue ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-rose-50 text-rose-700 border border-rose-200 animate-pulse">
                             <AlertTriangle className="w-3 h-3" />
                             {inv.overdueDays}d Overdue
                           </span>
                         ) : inv.status === "PAID" ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                             <CheckCircle2 className="w-3 h-3" />
                             Paid
                           </span>
                         ) : inv.status === "CONFIRMED" ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
                             Confirmed
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-700/50 text-slate-300">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-700 border border-slate-200">
                             {inv.status}
                           </span>
                         )}
@@ -746,7 +727,7 @@ export default function FinanceDashboardPage() {
                           {inv.balanceDue > 0 && (
                             <button
                               onClick={() => handleOpenPaymentModal(inv)}
-                              className="px-2.5 py-1 rounded-lg bg-emerald-600/80 hover:bg-emerald-600 text-white font-medium text-[11px] transition shadow flex items-center gap-1"
+                              className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-[11px] transition shadow-sm flex items-center gap-1"
                             >
                               <CreditCard className="w-3 h-3" />
                               Pay
@@ -754,7 +735,7 @@ export default function FinanceDashboardPage() {
                           )}
                           <Link
                             href={`/app/invoices/${inv.id}`}
-                            className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] transition"
+                            className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-medium transition"
                           >
                             View
                           </Link>
@@ -777,23 +758,23 @@ export default function FinanceDashboardPage() {
 
         {/* Quick Payment Modal */}
         {paymentModalOpen && selectedInvoiceForPayment && (
-          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl animate-scaleUp">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+          <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-6 shadow-2xl">
+              <div className="flex items-center justify-between pb-4 border-b border-slate-200">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
                     <CreditCard className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-white text-base">Record Payment Entry</h3>
-                    <p className="text-xs text-slate-400">
+                    <h3 className="font-bold text-slate-900 text-base">Record Payment Entry</h3>
+                    <p className="text-xs text-slate-500">
                       Invoice {selectedInvoiceForPayment.invoiceNumber}
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={() => setPaymentModalOpen(false)}
-                  className="text-slate-400 hover:text-white text-lg font-bold"
+                  className="text-slate-400 hover:text-slate-700 text-lg font-bold"
                 >
                   ✕
                 </button>
@@ -801,36 +782,36 @@ export default function FinanceDashboardPage() {
 
               <form onSubmit={handleRecordPayment} className="space-y-4 mt-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-slate-600 mb-1">
                     Customer Account
                   </label>
-                  <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs">
-                    <span className="font-bold text-white">{selectedInvoiceForPayment.customerName}</span>
-                    <span className="text-slate-400 block">{selectedInvoiceForPayment.customerCompany}</span>
+                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+                    <span className="font-bold text-slate-900">{selectedInvoiceForPayment.customerName}</span>
+                    <span className="text-slate-500 block">{selectedInvoiceForPayment.customerCompany}</span>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">
+                    <label className="block text-xs font-semibold text-slate-600 mb-1">
                       Total Invoice
                     </label>
-                    <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono font-semibold text-slate-300">
+                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono font-semibold text-slate-700">
                       {formatCurrency(selectedInvoiceForPayment.totalAmount)}
                     </div>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">
+                    <label className="block text-xs font-semibold text-slate-600 mb-1">
                       Balance Due
                     </label>
-                    <div className="p-2.5 rounded-xl bg-slate-950 border border-rose-500/30 text-xs font-mono font-bold text-rose-400">
+                    <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-xs font-mono font-bold text-rose-600">
                       {formatCurrency(selectedInvoiceForPayment.balanceDue)}
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-slate-600 mb-1">
                     Payment Amount ($) *
                   </label>
                   <input
@@ -840,18 +821,18 @@ export default function FinanceDashboardPage() {
                     value={paymentAmount}
                     onChange={(e) => setPaymentAmount(e.target.value)}
                     max={selectedInvoiceForPayment.balanceDue}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono text-sm focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-slate-900 font-mono text-sm focus:outline-none focus:border-emerald-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-slate-600 mb-1">
                     Payment Method *
                   </label>
                   <select
                     value={paymentMethod}
                     onChange={(e) => setPaymentMethod(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-emerald-500"
                   >
                     <option value="BANK_TRANSFER">Bank Wire / ACH Transfer</option>
                     <option value="CREDIT_CARD">Credit Card (Stripe)</option>
@@ -861,7 +842,7 @@ export default function FinanceDashboardPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-slate-600 mb-1">
                     Notes / Reference
                   </label>
                   <input
@@ -869,22 +850,22 @@ export default function FinanceDashboardPage() {
                     value={paymentNotes}
                     onChange={(e) => setPaymentNotes(e.target.value)}
                     placeholder="e.g. Wire confirmation ref #12345"
-                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-emerald-500"
                   />
                 </div>
 
-                <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
+                <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200">
                   <button
                     type="button"
                     onClick={() => setPaymentModalOpen(false)}
-                    className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"
+                    className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-500 hover:text-slate-900"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={paymentSubmitting}
-                    className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-lg shadow-emerald-600/20 flex items-center gap-2 disabled:opacity-50"
+                    className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow-sm flex items-center gap-2 disabled:opacity-50"
                   >
                     {paymentSubmitting ? "Recording..." : "Confirm Payment"}
                   </button>

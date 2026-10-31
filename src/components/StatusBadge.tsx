@@ -6,8 +6,6 @@ import {
   FileText,
   PauseCircle,
   XCircle,
-  ShieldAlert,
-  Sparkles,
 } from "lucide-react";
 
 export type StatusType =
@@ -36,15 +34,14 @@ export default function StatusBadge({
 }: StatusBadgeProps) {
   const norm = (status || "").toUpperCase();
 
-  // Overdue overrides other statuses for invoices
   if (isOverdue && norm !== "PAID" && norm !== "CANCELLED") {
     return (
       <span
-        className={`inline-flex items-center gap-1.5 font-bold rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-sm animate-pulse ${
+        className={`inline-flex items-center gap-1.5 font-medium rounded-full bg-rose-50 text-rose-700 border border-rose-200 ${
           size === "sm" ? "px-2 py-0.5 text-[10px]" : "px-2.5 py-0.5 text-xs"
         } ${className}`}
       >
-        <AlertTriangle className={size === "sm" ? "w-3 h-3" : "w-3.5 h-3.5"} />
+        <AlertTriangle className={size === "sm" ? "w-3 h-3 text-rose-600" : "w-3.5 h-3.5 text-rose-600"} />
         Overdue
       </span>
     );
@@ -54,11 +51,11 @@ export default function StatusBadge({
     case "ACTIVE":
       return (
         <span
-          className={`inline-flex items-center gap-1.5 font-semibold rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 ${
+          className={`inline-flex items-center gap-1.5 font-medium rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 ${
             size === "sm" ? "px-2 py-0.5 text-[10px]" : "px-2.5 py-0.5 text-xs"
           } ${className}`}
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
           Active
         </span>
       );
@@ -66,11 +63,11 @@ export default function StatusBadge({
     case "PAID":
       return (
         <span
-          className={`inline-flex items-center gap-1.5 font-semibold rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/35 ${
+          className={`inline-flex items-center gap-1.5 font-medium rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 ${
             size === "sm" ? "px-2 py-0.5 text-[10px]" : "px-2.5 py-0.5 text-xs"
           } ${className}`}
         >
-          <CheckCircle2 className={size === "sm" ? "w-3 h-3" : "w-3.5 h-3.5"} />
+          <CheckCircle2 className={size === "sm" ? "w-3 h-3 text-emerald-600" : "w-3.5 h-3.5 text-emerald-600"} />
           Paid
         </span>
       );
@@ -78,11 +75,11 @@ export default function StatusBadge({
     case "CONFIRMED":
       return (
         <span
-          className={`inline-flex items-center gap-1.5 font-semibold rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 ${
+          className={`inline-flex items-center gap-1.5 font-medium rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 ${
             size === "sm" ? "px-2 py-0.5 text-[10px]" : "px-2.5 py-0.5 text-xs"
           } ${className}`}
         >
-          <Clock className={size === "sm" ? "w-3 h-3" : "w-3.5 h-3.5"} />
+          <Clock className={size === "sm" ? "w-3 h-3 text-indigo-600" : "w-3.5 h-3.5 text-indigo-600"} />
           Confirmed
         </span>
       );
@@ -90,11 +87,11 @@ export default function StatusBadge({
     case "QUOTATION":
       return (
         <span
-          className={`inline-flex items-center gap-1.5 font-semibold rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30 ${
+          className={`inline-flex items-center gap-1.5 font-medium rounded-full bg-sky-50 text-sky-700 border border-sky-200 ${
             size === "sm" ? "px-2 py-0.5 text-[10px]" : "px-2.5 py-0.5 text-xs"
           } ${className}`}
         >
-          <FileText className={size === "sm" ? "w-3 h-3" : "w-3.5 h-3.5"} />
+          <FileText className={size === "sm" ? "w-3 h-3 text-sky-600" : "w-3.5 h-3.5 text-sky-600"} />
           Quotation
         </span>
       );
@@ -102,11 +99,11 @@ export default function StatusBadge({
     case "PAUSED":
       return (
         <span
-          className={`inline-flex items-center gap-1.5 font-semibold rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 ${
+          className={`inline-flex items-center gap-1.5 font-medium rounded-full bg-amber-50 text-amber-700 border border-amber-200 ${
             size === "sm" ? "px-2 py-0.5 text-[10px]" : "px-2.5 py-0.5 text-xs"
           } ${className}`}
         >
-          <PauseCircle className={size === "sm" ? "w-3 h-3" : "w-3.5 h-3.5"} />
+          <PauseCircle className={size === "sm" ? "w-3 h-3 text-amber-600" : "w-3.5 h-3.5 text-amber-600"} />
           Paused
         </span>
       );
@@ -114,7 +111,7 @@ export default function StatusBadge({
     case "DRAFT":
       return (
         <span
-          className={`inline-flex items-center gap-1 font-semibold rounded-full bg-slate-700/40 text-slate-300 border border-slate-600/40 ${
+          className={`inline-flex items-center gap-1 font-medium rounded-full bg-slate-100 text-slate-700 border border-slate-200 ${
             size === "sm" ? "px-2 py-0.5 text-[10px]" : "px-2.5 py-0.5 text-xs"
           } ${className}`}
         >
@@ -126,7 +123,7 @@ export default function StatusBadge({
     case "CANCELLED":
       return (
         <span
-          className={`inline-flex items-center gap-1 font-semibold rounded-full bg-zinc-800/60 text-zinc-400 border border-zinc-700/40 ${
+          className={`inline-flex items-center gap-1 font-medium rounded-full bg-slate-100 text-slate-600 border border-slate-200 ${
             size === "sm" ? "px-2 py-0.5 text-[10px]" : "px-2.5 py-0.5 text-xs"
           } ${className}`}
         >
@@ -138,7 +135,7 @@ export default function StatusBadge({
     default:
       return (
         <span
-          className={`inline-flex items-center font-semibold rounded-full bg-slate-800 text-slate-300 border border-slate-700 ${
+          className={`inline-flex items-center font-medium rounded-full bg-slate-100 text-slate-700 border border-slate-200 ${
             size === "sm" ? "px-2 py-0.5 text-[10px]" : "px-2.5 py-0.5 text-xs"
           } ${className}`}
         >

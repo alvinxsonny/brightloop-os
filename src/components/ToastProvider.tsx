@@ -93,28 +93,28 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           return (
             <div
               key={t.id}
-              className={`pointer-events-auto flex items-start gap-3 p-3.5 rounded-xl border shadow-2xl backdrop-blur-md transition-all duration-300 animate-in fade-in slide-in-from-top-3 ${
+              className={`pointer-events-auto flex items-start gap-3 p-3.5 rounded-xl border shadow-lg transition-all duration-300 animate-in fade-in slide-in-from-top-3 ${
                 isSuccess
-                  ? "bg-slate-900/95 border-emerald-500/40 text-emerald-200 shadow-emerald-950/40"
+                  ? "bg-white border-emerald-200 text-slate-800"
                   : isError
-                  ? "bg-slate-900/95 border-rose-500/40 text-rose-200 shadow-rose-950/40"
-                  : "bg-slate-900/95 border-indigo-500/40 text-indigo-200 shadow-indigo-950/40"
+                  ? "bg-white border-rose-200 text-slate-800"
+                  : "bg-white border-indigo-200 text-slate-800"
               }`}
             >
               <div className="mt-0.5 shrink-0">
-                {isSuccess && <CheckCircle2 className="w-4 h-4 text-emerald-400" />}
-                {isError && <AlertCircle className="w-4 h-4 text-rose-400" />}
-                {!isSuccess && !isError && <Info className="w-4 h-4 text-indigo-400" />}
+                {isSuccess && <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
+                {isError && <AlertCircle className="w-4 h-4 text-rose-600" />}
+                {!isSuccess && !isError && <Info className="w-4 h-4 text-indigo-600" />}
               </div>
 
               <div className="flex-1 min-w-0">
-                {t.title && <div className="text-xs font-bold text-white mb-0.5">{t.title}</div>}
-                <div className="text-xs text-slate-300 leading-snug break-words">{t.message}</div>
+                {t.title && <div className="text-xs font-semibold text-slate-900 mb-0.5">{t.title}</div>}
+                <div className="text-xs text-slate-600 leading-snug break-words">{t.message}</div>
               </div>
 
               <button
                 onClick={() => removeToast(t.id)}
-                className="shrink-0 p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+                className="shrink-0 p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition cursor-pointer"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
