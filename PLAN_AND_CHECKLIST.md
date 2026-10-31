@@ -8,7 +8,7 @@
 
 ## 📌 Progress Tracker Overview
 
-- [ ] **Phase 1: Architecture, Data Schema & Instant Seeding** *(0:00 - 0:30)*
+- [x] **Phase 1: Architecture, Data Schema & Instant Seeding** *(0:00 - 0:30)*
 - [ ] **Phase 2: Auth, Security & Role-Based Access Control (RBAC)** *(0:30 - 1:15)*
 - [ ] **Phase 3: Product Catalog, Quotation Templates & Subscriptions** *(1:15 - 2:15)*
 - [ ] **Phase 4: Automated Billing Engine & Invoicing** *(2:15 - 3:15)*
@@ -21,22 +21,22 @@
 ## 📋 Detailed Task Checklist
 
 ### Phase 1: Architecture, Data Schema & Instant Seeding (30 mins)
-- [ ] Initialize Next.js project with TypeScript, Tailwind CSS, and Lucide icons.
-- [ ] Configure Prisma ORM with SQLite for instant local zero-config database.
-- [ ] Implement database models in `schema.prisma`:
-  - [ ] `User` (`ADMIN`, `STAFF`, `CUSTOMER`)
-  - [ ] `Product` & `ProductVariant` (variant surcharge e.g., Odoo +560)
-  - [ ] `Plan` (frequency: `DAILY`, `WEEKLY`, `MONTHLY`, `YEARLY`, min qty, flags: `autoClose`, `allowPause`, `allowRenew`)
-  - [ ] `QuotationTemplate` & `TemplateLine`
-  - [ ] `Subscription` & `SubscriptionLine` (status: `DRAFT`, `QUOTATION`, `CONFIRMED`, `ACTIVE`, `PAUSED`, `CLOSED`)
-  - [ ] `Invoice` & `InvoiceLine` (status: `DRAFT`, `CONFIRMED`, `PAID`, `CANCELLED`)
-  - [ ] `Payment` (method, amount, timestamp, notes)
-  - [ ] `TaxRule` & `DiscountRule` (fixed/percentage, min purchase, validity dates, usage limit)
-- [ ] Create seed script (`prisma/seed.ts`) pre-loading:
-  - [ ] Admin, Staff, and Customer test accounts
-  - [ ] Products with variants (e.g., base product + Odoo variant)
-  - [ ] Quotation template, sample active subscriptions, and an overdue invoice
-- [ ] Run migration and execute seed to verify database state.
+- [x] Initialize Next.js project with TypeScript, Tailwind CSS, and Lucide icons.
+- [x] Configure Prisma ORM with SQLite for instant local zero-config database.
+- [x] Implement database models in `schema.prisma`:
+  - [x] `User` (`ADMIN`, `STAFF`, `CUSTOMER`)
+  - [x] `Product` & `ProductVariant` (variant surcharge e.g., Odoo +560)
+  - [x] `Plan` (frequency: `DAILY`, `WEEKLY`, `MONTHLY`, `YEARLY`, min qty, flags: `autoClose`, `allowPause`, `allowRenew`)
+  - [x] `QuotationTemplate` & `TemplateLine`
+  - [x] `Subscription` & `SubscriptionLine` (status: `DRAFT`, `QUOTATION`, `CONFIRMED`, `ACTIVE`, `PAUSED`, `CLOSED`)
+  - [x] `Invoice` & `InvoiceLine` (status: `DRAFT`, `CONFIRMED`, `PAID`, `CANCELLED`)
+  - [x] `Payment` (method, amount, timestamp, notes)
+  - [x] `TaxRule` & `DiscountRule` (fixed/percentage, min purchase, validity dates, usage limit)
+- [x] Create seed script (`prisma/seed.ts`) pre-loading:
+  - [x] Admin, Staff, and Customer test accounts
+  - [x] Products with variants (e.g., base product + Odoo variant)
+  - [x] Quotation template, sample active subscriptions, and an overdue invoice
+- [x] Run migration and execute seed to verify database state.
 
 ---
 
