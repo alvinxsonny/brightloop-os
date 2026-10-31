@@ -14,11 +14,13 @@ import {
   DollarSign,
   X,
 } from "lucide-react";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
+import { useCurrency } from "@/context/CurrencyContext";
 import { useToast } from "@/components/ToastProvider";
 
 export default function InvoiceDetailPage() {
   const { toast } = useToast();
+  const { formatCurrency } = useCurrency();
   const params = useParams();
   const id = params?.id as string;
 
@@ -159,12 +161,12 @@ export default function InvoiceDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
+    <div className="min-h-screen text-slate-900 flex flex-col">
       <div className="print:hidden">
         <Navbar user={user} />
       </div>
 
-      <main className="max-w-4xl mx-auto px-6 py-8 w-full flex-1">
+      <main className="max-w-4xl mx-auto px-6 py-8 w-full flex-1 md:pl-28">
         {/* Navigation & Action Bar */}
         <div className="print:hidden mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <Link

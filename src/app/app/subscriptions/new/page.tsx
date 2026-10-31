@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Plus, Trash2, Zap, AlertCircle } from "lucide-react";
-import { formatCurrency } from "@/lib/utils";
+import { useCurrency } from "@/context/CurrencyContext";
 
 interface LineItem {
   productId: string;
@@ -18,6 +18,7 @@ interface LineItem {
 }
 
 export default function NewSubscriptionPage() {
+  const { formatCurrency } = useCurrency();
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
 
@@ -204,10 +205,10 @@ export default function NewSubscriptionPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
+    <div className="min-h-screen text-slate-900 flex flex-col">
       <Navbar user={user} />
 
-      <main className="max-w-6xl mx-auto px-6 py-8 w-full flex-1">
+      <main className="max-w-6xl mx-auto px-6 py-8 w-full flex-1 md:pl-28">
         <Link
           href="/app/subscriptions"
           className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-900 transition mb-4"

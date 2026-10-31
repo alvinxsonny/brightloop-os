@@ -17,11 +17,13 @@ import {
   Calendar,
   Building,
 } from "lucide-react";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
+import { useCurrency } from "@/context/CurrencyContext";
 import { useToast } from "@/components/ToastProvider";
 
 export default function SubscriptionDetailPage() {
   const { toast } = useToast();
+  const { formatCurrency } = useCurrency();
   const params = useParams();
   const id = params?.id as string;
 
@@ -116,10 +118,10 @@ export default function SubscriptionDetailPage() {
   const currentStageIndex = stages.indexOf(sub.status === "PAUSED" ? "ACTIVE" : sub.status);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
+    <div className="min-h-screen text-slate-900 flex flex-col">
       <Navbar user={user} />
 
-      <main className="max-w-6xl mx-auto px-6 py-8 w-full flex-1">
+      <main className="max-w-6xl mx-auto px-6 py-8 w-full flex-1 md:pl-28">
         <Link
           href="/app/subscriptions"
           className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-900 transition mb-4"
@@ -129,7 +131,7 @@ export default function SubscriptionDetailPage() {
         </Link>
 
         {/* Top Header Card */}
-        <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div className="p-6 rounded-3xl glass-panel flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div>
             <div className="flex items-center gap-3 mb-2">
               <span className="font-mono text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">

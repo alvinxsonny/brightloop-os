@@ -5,9 +5,11 @@ import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import { TrendingUp, Plus, Search, ArrowRight, FileText } from "lucide-react";
 import StatusBadge from "@/components/StatusBadge";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
+import { useCurrency } from "@/context/CurrencyContext";
 
 export default function SubscriptionsListPage() {
+  const { formatCurrency } = useCurrency();
   const [user, setUser] = useState<any>(null);
   const [subscriptions, setSubscriptions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -51,17 +53,17 @@ export default function SubscriptionsListPage() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
+    <div className="min-h-screen text-slate-900 flex flex-col">
       <Navbar user={user} />
 
-      <main className="max-w-7xl mx-auto px-6 py-8 w-full flex-1">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-200">
+      <main className="max-w-7xl mx-auto px-6 py-8 w-full flex-1 md:pl-28">
+        <div className="p-6 rounded-3xl glass-panel mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200 mb-2">
-              <TrendingUp className="w-3.5 h-3.5 text-blue-600" />
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-300 mb-2">
+              <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
               Contract & Quote Lifecycle
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
               Subscriptions & Quotations
             </h1>
             <p className="text-sm text-slate-500 mt-1">
@@ -71,7 +73,7 @@ export default function SubscriptionsListPage() {
 
           <Link
             href="/app/subscriptions/new"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm shadow-xs transition"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-md shadow-emerald-600/20 transition"
           >
             <Plus className="w-4 h-4" />
             New Quotation / Offer
@@ -86,8 +88,8 @@ export default function SubscriptionsListPage() {
                 onClick={() => setStatusFilter(st)}
                 className={`px-3 py-1.5 rounded-xl font-medium transition whitespace-nowrap cursor-pointer ${
                   statusFilter === st
-                    ? "bg-indigo-600 text-white shadow-xs"
-                    : "bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200"
+                    ? "bg-emerald-600 text-white font-bold shadow-xs"
+                    : "glass-card text-slate-600 hover:text-slate-900 hover:bg-emerald-50/50"
                 }`}
               >
                 {st}
@@ -102,12 +104,12 @@ export default function SubscriptionsListPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search subscription or customer..."
-              className="w-full pl-9 pr-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-900 text-xs placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              className="w-full pl-9 pr-3.5 py-2 rounded-xl bg-white/90 border border-emerald-500/20 text-slate-900 text-xs placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
             />
           </div>
         </div>
 
-        <div className="mt-6 bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+        <div className="mt-6 glass-panel rounded-3xl overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200 font-medium">

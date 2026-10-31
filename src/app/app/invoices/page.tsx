@@ -11,11 +11,13 @@ import {
   CheckCircle2,
   X,
 } from "lucide-react";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
+import { useCurrency } from "@/context/CurrencyContext";
 import { useToast } from "@/components/ToastProvider";
 
 export default function InvoicesListPage() {
   const { toast } = useToast();
+  const { formatCurrency } = useCurrency();
   const [user, setUser] = useState<any>(null);
   const [invoices, setInvoices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -108,18 +110,18 @@ export default function InvoicesListPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
+    <div className="min-h-screen text-slate-900 flex flex-col">
       <Navbar user={user} />
 
-      <main className="max-w-7xl mx-auto px-6 py-8 w-full flex-1">
+      <main className="max-w-7xl mx-auto px-6 py-8 w-full flex-1 md:pl-28">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-200">
+        <div className="p-6 rounded-3xl glass-panel mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 mb-2">
-              <Receipt className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-300 mb-2">
+              <Receipt className="w-3.5 h-3.5 text-emerald-600" />
               Automated Recurring Invoicing
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
               Billing & Invoices
             </h1>
             <p className="text-sm text-slate-500 mt-1">
@@ -131,7 +133,7 @@ export default function InvoicesListPage() {
             <button
               onClick={handleRunBilling}
               disabled={runningBilling}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm shadow-sm transition disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-md shadow-emerald-600/20 transition disabled:opacity-50 cursor-pointer"
             >
               <Play className="w-4 h-4" />
               {runningBilling ? "Executing Billing Run..." : "Trigger Billing Day Run"}
@@ -146,10 +148,10 @@ export default function InvoicesListPage() {
               <button
                 key={st}
                 onClick={() => setStatusFilter(st)}
-                className={`px-3 py-1.5 rounded-lg font-medium transition whitespace-nowrap ${
+                className={`px-3 py-1.5 rounded-xl font-medium transition whitespace-nowrap cursor-pointer ${
                   statusFilter === st
-                    ? "bg-indigo-600 text-white shadow-sm"
-                    : "bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-slate-200"
+                    ? "bg-emerald-600 text-white font-bold shadow-xs"
+                    : "glass-card text-slate-600 hover:text-slate-900 hover:bg-emerald-50/50"
                 }`}
               >
                 {st}
@@ -164,13 +166,13 @@ export default function InvoicesListPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search invoice or customer..."
-              className="w-full pl-9 pr-3.5 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full pl-9 pr-3.5 py-2 rounded-xl bg-white/90 border border-emerald-500/20 text-slate-900 text-xs placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
         </div>
 
         {/* Invoices Table */}
-        <div className="mt-6 bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+        <div className="mt-6 glass-panel rounded-3xl overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead className="bg-slate-50 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200">

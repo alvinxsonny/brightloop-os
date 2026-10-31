@@ -1,16 +1,20 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { formatCurrencyAmount, CurrencyCode } from "@/context/CurrencyContext";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-  }).format(amount || 0);
+export function formatCurrency(amount: number, currencyCode?: string): string {
+  let code: CurrencyCode = "USD";
+  if (currencyCode) {
+    code = currencyCode as CurrencyCode;
+  } else if (typeof window !== "undefined") {
+    const saved = localStorage.getItem("brightloop_currency");
+    if (saved) code = saved as CurrencyCode;
+  }
+  return formatCurrencyAmount(amount, code);
 }
 
 export function formatDate(date: Date | string | null | undefined): string {
@@ -34,4 +38,3 @@ export function formatDateTime(date: Date | string | null | undefined): string {
     minute: "2-digit",
   }).format(d);
 }
-

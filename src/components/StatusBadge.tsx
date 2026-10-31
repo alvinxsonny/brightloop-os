@@ -75,11 +75,11 @@ export default function StatusBadge({
     case "CONFIRMED":
       return (
         <span
-          className={`inline-flex items-center gap-1.5 font-medium rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 ${
+          className={`inline-flex items-center gap-1.5 font-medium rounded-full bg-teal-50 text-teal-800 border border-teal-200 ${
             size === "sm" ? "px-2 py-0.5 text-[10px]" : "px-2.5 py-0.5 text-xs"
           } ${className}`}
         >
-          <Clock className={size === "sm" ? "w-3 h-3 text-indigo-600" : "w-3.5 h-3.5 text-indigo-600"} />
+          <Clock className={size === "sm" ? "w-3 h-3 text-teal-600" : "w-3.5 h-3.5 text-teal-600"} />
           Confirmed
         </span>
       );

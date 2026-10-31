@@ -80,7 +80,7 @@ export default function AdminStaffPage() {
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
       <Navbar user={user} />
 
-      <main className="max-w-7xl mx-auto px-6 py-8 w-full flex-1">
+      <main className="max-w-7xl mx-auto px-6 py-8 w-full flex-1 md:pl-28">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-200">
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-50 text-purple-700 border border-purple-200 mb-2">

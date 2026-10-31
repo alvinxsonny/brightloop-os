@@ -4,9 +4,11 @@ import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import { Receipt, ArrowRight } from "lucide-react";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
+import { useCurrency } from "@/context/CurrencyContext";
 
 export default function CustomerInvoicesPage() {
+  const { formatCurrency } = useCurrency();
   const [user, setUser] = useState<any>(null);
   const [invoices, setInvoices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,16 +38,16 @@ export default function CustomerInvoicesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
+    <div className="min-h-screen text-slate-900 flex flex-col">
       <Navbar user={user} />
 
-      <main className="max-w-7xl mx-auto px-6 py-8 w-full flex-1">
-        <div className="pb-6 border-b border-slate-200">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 mb-2">
-            <Receipt className="w-3.5 h-3.5" />
+      <main className="max-w-7xl mx-auto px-6 py-8 w-full flex-1 md:pl-28">
+        <div className="p-6 rounded-3xl glass-panel mb-8">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-300 mb-2">
+            <Receipt className="w-3.5 h-3.5 text-emerald-600" />
             Billing Receipts
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
             My Invoices & Statements
           </h1>
           <p className="text-sm text-slate-500 mt-1">
@@ -53,10 +55,10 @@ export default function CustomerInvoicesPage() {
           </p>
         </div>
 
-        <div className="mt-8 bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+        <div className="glass-panel rounded-3xl overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-slate-50 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200">
+              <thead className="bg-emerald-50/50 text-slate-600 text-xs uppercase tracking-wider border-b border-emerald-500/10">
                 <tr>
                   <th className="px-6 py-3.5 font-semibold">Invoice #</th>
                   <th className="px-6 py-3.5 font-semibold">Issue Date</th>
@@ -67,7 +69,7 @@ export default function CustomerInvoicesPage() {
                   <th className="px-6 py-3.5 font-semibold text-right">Receipt</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-emerald-500/10">
                 {loading ? (
                   <tr>
                     <td colSpan={7} className="px-6 py-10 text-center text-slate-500 text-xs">
@@ -82,8 +84,8 @@ export default function CustomerInvoicesPage() {
                   </tr>
                 ) : (
                   invoices.map((inv) => (
-                    <tr key={inv.id} className="hover:bg-slate-50/70 transition">
-                      <td className="px-6 py-4 font-mono font-medium text-slate-900">{inv.invoiceNumber}</td>
+                    <tr key={inv.id} className="hover:bg-emerald-50/40 transition">
+                      <td className="px-6 py-4 font-mono font-bold text-slate-900">{inv.invoiceNumber}</td>
                       <td className="px-6 py-4 text-slate-600 text-xs">{formatDate(inv.issueDate)}</td>
                       <td className="px-6 py-4 text-slate-600 text-xs">{formatDate(inv.dueDate)}</td>
                       <td className="px-6 py-4">
@@ -92,7 +94,7 @@ export default function CustomerInvoicesPage() {
                             inv.status === "PAID"
                               ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                               : inv.status === "CONFIRMED"
-                              ? "bg-blue-50 text-blue-700 border-blue-200"
+                              ? "bg-teal-50 text-teal-700 border-teal-200"
                               : inv.isOverdue
                               ? "bg-rose-50 text-rose-700 border-rose-200"
                               : "bg-slate-100 text-slate-700 border-slate-200"
@@ -101,20 +103,20 @@ export default function CustomerInvoicesPage() {
                           {inv.isOverdue ? "OVERDUE" : inv.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4 font-semibold text-slate-900">{formatCurrency(inv.totalAmount)}</td>
-                      <td className="px-6 py-4 font-medium">
+                      <td className="px-6 py-4 font-bold text-slate-900">{formatCurrency(inv.totalAmount)}</td>
+                      <td className="px-6 py-4 font-semibold">
                         {inv.balanceDue > 0 ? (
                           <span className={inv.isOverdue ? "text-rose-600 font-bold" : "text-amber-600"}>
                             {formatCurrency(inv.balanceDue)}
                           </span>
                         ) : (
-                          <span className="text-emerald-600">Settled</span>
+                          <span className="text-emerald-700 font-bold">Settled</span>
                         )}
                       </td>
                       <td className="px-6 py-4 text-right">
                         <Link
                           href={`/app/invoices/${inv.id}`}
-                          className="inline-flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-700 font-medium"
+                          className="inline-flex items-center gap-1 text-xs text-emerald-700 hover:text-emerald-800 font-semibold"
                         >
                           View Receipt
                           <ArrowRight className="w-3.5 h-3.5" />

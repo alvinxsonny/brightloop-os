@@ -31,11 +31,13 @@ import {
   Tooltip,
   Cell,
 } from "recharts";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
+import { useCurrency } from "@/context/CurrencyContext";
 import { useToast } from "@/components/ToastProvider";
 
 export default function FinanceDashboardPage() {
   const { toast } = useToast();
+  const { formatCurrency, currency } = useCurrency();
   const [user, setUser] = useState<any>(null);
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -209,10 +211,10 @@ export default function FinanceDashboardPage() {
   }, [data, activeTab, selectedPlan, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
+    <div className="min-h-screen text-slate-900 flex flex-col">
       <Navbar user={user} />
 
-      <main className="max-w-7xl mx-auto px-6 py-8 w-full flex-1">
+      <main className="max-w-7xl mx-auto px-6 py-8 w-full flex-1 md:pl-28">
         {/* Header Bar */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
           <div>
@@ -286,10 +288,10 @@ export default function FinanceDashboardPage() {
         {/* Top Executive KPI Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
           {/* Card 1: MRR & ARR */}
-          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm relative overflow-hidden">
+          <div className="p-6 rounded-3xl glass-card relative overflow-hidden">
             <div className="flex items-center justify-between text-slate-500 mb-2">
-              <span className="text-xs uppercase font-bold tracking-wider text-indigo-600">Monthly Recurring (MRR)</span>
-              <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+              <span className="text-xs uppercase font-bold tracking-wider text-emerald-800">Monthly Recurring (MRR)</span>
+              <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
                 <DollarSign className="w-4 h-4" />
               </div>
             </div>
@@ -298,17 +300,17 @@ export default function FinanceDashboardPage() {
             </div>
             <div className="flex items-center justify-between text-xs mt-3 pt-3 border-t border-slate-100">
               <span className="text-slate-500">Annual Run-rate (ARR):</span>
-              <span className="text-indigo-600 font-semibold font-mono">
+              <span className="text-emerald-700 font-semibold font-mono">
                 {formatCurrency(data?.kpis?.arr || 0)}
               </span>
             </div>
           </div>
 
           {/* Card 2: Active Subscriptions & Retention */}
-          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm relative overflow-hidden">
+          <div className="p-6 rounded-3xl glass-card relative overflow-hidden">
             <div className="flex items-center justify-between text-slate-500 mb-2">
-              <span className="text-xs uppercase font-bold tracking-wider text-sky-600">Active Subscriptions</span>
-              <div className="w-8 h-8 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center">
+              <span className="text-xs uppercase font-bold tracking-wider text-teal-800">Active Subscriptions</span>
+              <div className="w-8 h-8 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center">
                 <TrendingUp className="w-4 h-4" />
               </div>
             </div>
@@ -320,21 +322,21 @@ export default function FinanceDashboardPage() {
             </div>
             <div className="flex items-center justify-between text-xs mt-3 pt-3 border-t border-slate-100">
               <span className="text-slate-500">Pause Rate: {data?.kpis?.pauseRate ?? 0}%</span>
-              <span className="text-emerald-600 font-medium">
+              <span className="text-emerald-700 font-medium">
                 Churn: {data?.kpis?.churnRate ?? 0}%
               </span>
             </div>
           </div>
 
           {/* Card 3: Total Collected vs Receivables */}
-          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm relative overflow-hidden">
+          <div className="p-6 rounded-3xl glass-card relative overflow-hidden">
             <div className="flex items-center justify-between text-slate-500 mb-2">
-              <span className="text-xs uppercase font-bold tracking-wider text-emerald-600">Cash Collected</span>
-              <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <span className="text-xs uppercase font-bold tracking-wider text-emerald-800">Cash Collected</span>
+              <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
                 <CheckCircle2 className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-3xl font-black text-emerald-600 tracking-tight">
+            <div className="text-3xl font-black text-emerald-700 tracking-tight">
               {formatCurrency(data?.kpis?.totalCollected || 0)}
             </div>
             <div className="flex items-center justify-between text-xs mt-3 pt-3 border-t border-slate-100">
@@ -346,25 +348,25 @@ export default function FinanceDashboardPage() {
           </div>
 
           {/* Card 4: Overdue Invoices Alert */}
-          <div className={`p-5 rounded-2xl border shadow-sm relative overflow-hidden transition ${
+          <div className={`p-6 rounded-3xl border shadow-sm relative overflow-hidden transition ${
             (data?.kpis?.overdueCount || 0) > 0
-              ? "bg-rose-50/50 border-rose-200"
-              : "bg-white border-slate-200"
+              ? "bg-rose-50/70 border-rose-200"
+              : "glass-card"
           }`}>
             <div className="flex items-center justify-between text-slate-500 mb-2">
               <span className={`text-xs uppercase font-bold tracking-wider ${
-                (data?.kpis?.overdueCount || 0) > 0 ? "text-rose-600" : "text-slate-500"
+                (data?.kpis?.overdueCount || 0) > 0 ? "text-rose-700" : "text-slate-500"
               }`}>
                 Overdue Receivables
               </span>
-              <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                (data?.kpis?.overdueCount || 0) > 0 ? "bg-rose-100 text-rose-600" : "bg-slate-100 text-slate-500"
+              <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${
+                (data?.kpis?.overdueCount || 0) > 0 ? "bg-rose-100 text-rose-700" : "bg-slate-100 text-slate-500"
               }`}>
                 <AlertTriangle className="w-4 h-4" />
               </div>
             </div>
             <div className={`text-3xl font-black tracking-tight ${
-              (data?.kpis?.overdueCount || 0) > 0 ? "text-rose-600" : "text-slate-900"
+              (data?.kpis?.overdueCount || 0) > 0 ? "text-rose-700" : "text-slate-900"
             }`}>
               {formatCurrency(data?.kpis?.overdueAmount || 0)}
             </div>
@@ -372,7 +374,7 @@ export default function FinanceDashboardPage() {
               <span className="text-slate-500">Delinquent Invoices:</span>
               <button
                 onClick={() => setActiveTab("OVERDUE")}
-                className="text-rose-600 hover:text-rose-700 font-bold underline cursor-pointer"
+                className="text-rose-700 hover:text-rose-800 font-bold underline cursor-pointer"
               >
                 {data?.kpis?.overdueCount || 0} Invoices (View)
               </button>
@@ -383,11 +385,11 @@ export default function FinanceDashboardPage() {
         {/* Charts Row */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* Chart 1: Revenue Performance Trend */}
-          <div className="lg:col-span-2 p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div className="lg:col-span-2 p-6 rounded-3xl glass-panel shadow-sm flex flex-col justify-between">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-indigo-600" />
+                  <TrendingUp className="w-4 h-4 text-emerald-700" />
                   Monthly Billing vs. Cash Collections (Last 6 Months)
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
@@ -395,10 +397,10 @@ export default function FinanceDashboardPage() {
                 </p>
               </div>
               <div className="flex items-center gap-3 text-xs">
-                <span className="flex items-center gap-1.5 text-indigo-700 font-medium">
-                  <span className="w-3 h-3 rounded-full bg-indigo-600" /> Invoiced
+                <span className="flex items-center gap-1.5 text-teal-800 font-medium">
+                  <span className="w-3 h-3 rounded-full bg-teal-600" /> Invoiced
                 </span>
-                <span className="flex items-center gap-1.5 text-emerald-700 font-medium">
+                <span className="flex items-center gap-1.5 text-emerald-800 font-medium">
                   <span className="w-3 h-3 rounded-full bg-emerald-600" /> Collected
                 </span>
               </div>
@@ -410,23 +412,23 @@ export default function FinanceDashboardPage() {
                   <AreaChart data={data.monthlyTrend} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <defs>
                       <linearGradient id="colorInvoiced" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.2} />
-                        <stop offset="95%" stopColor="#6366f1" stopOpacity={0.0} />
+                        <stop offset="5%" stopColor="#0d9488" stopOpacity={0.25} />
+                        <stop offset="95%" stopColor="#0d9488" stopOpacity={0.0} />
                       </linearGradient>
                       <linearGradient id="colorCollected" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.2} />
-                        <stop offset="95%" stopColor="#10b981" stopOpacity={0.0} />
+                        <stop offset="5%" stopColor="#00a86b" stopOpacity={0.25} />
+                        <stop offset="95%" stopColor="#00a86b" stopOpacity={0.0} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                     <XAxis dataKey="month" stroke="#94a3b8" tick={{ fontSize: 11 }} />
-                    <YAxis stroke="#94a3b8" tick={{ fontSize: 11 }} tickFormatter={(val) => `$${val}`} />
+                    <YAxis stroke="#94a3b8" tick={{ fontSize: 11 }} tickFormatter={(val) => formatCurrency(Number(val))} />
                     <Tooltip
                       contentStyle={{ backgroundColor: "#ffffff", borderColor: "#e2e8f0", borderRadius: "0.75rem", fontSize: "12px", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" }}
                       formatter={(val: any) => formatCurrency(Number(val))}
                     />
-                    <Area type="monotone" dataKey="invoiced" stroke="#6366f1" strokeWidth={2} fillOpacity={1} fill="url(#colorInvoiced)" />
-                    <Area type="monotone" dataKey="collected" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorCollected)" />
+                    <Area type="monotone" dataKey="invoiced" stroke="#0d9488" strokeWidth={2} fillOpacity={1} fill="url(#colorInvoiced)" />
+                    <Area type="monotone" dataKey="collected" stroke="#00a86b" strokeWidth={2} fillOpacity={1} fill="url(#colorCollected)" />
                   </AreaChart>
                 </ResponsiveContainer>
               ) : (

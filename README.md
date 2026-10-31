@@ -15,9 +15,11 @@ Subscription management and recurring billing platform for software businesses.
 
 ## Tech Stack
 
+- **Multi-Currency Support**: Real-time switching across prominent currencies (`USD`, `EUR`, `GBP`, `INR`, `JPY`, `CAD`, `AUD`) throughout all dashboards, invoices, and analytics.
+- **Modern UI & Bento Layouts**: Cloudy white and Jade Green palette, background graph grid, heavily blurred floating gradient circles, vertical left-side hover-expand pill navigation, and glassmorphic bento cards.
 - **Framework**: [Next.js](https://nextjs.org/) (App Router, Server Actions, Route Handlers)
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS (Poppins typography, clean light theme)
+- **Styling**: Tailwind CSS (Poppins typography, cloudy white & jade green theme, glassmorphism)
 - **Database**: SQLite via [Prisma ORM](https://www.prisma.io/)
 - **Charts**: Recharts
 - **Icons**: Lucide React
@@ -63,3 +65,4 @@ All pre-seeded demo accounts use the password: `Password@123`
 npm run build
 npm start
 ```
+

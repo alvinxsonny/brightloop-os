@@ -3,9 +3,11 @@
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import { Layers, Plus, Package, Calendar, FileText, CheckCircle2, AlertCircle, X, Tag } from "lucide-react";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
+import { useCurrency } from "@/context/CurrencyContext";
 
 export default function CatalogPage() {
+  const { formatCurrency } = useCurrency();
   const [user, setUser] = useState<any>(null);
   const [tab, setTab] = useState<"products" | "plans" | "templates">("products");
   const [products, setProducts] = useState<any[]>([]);
@@ -154,14 +156,14 @@ export default function CatalogPage() {
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
       <Navbar user={user} />
 
-      <main className="max-w-7xl mx-auto px-6 py-8 w-full flex-1">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-200">
+      <main className="max-w-7xl mx-auto px-6 py-8 w-full flex-1 md:pl-28">
+        <div className="p-6 rounded-3xl glass-panel mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200 mb-2">
-              <Layers className="w-3.5 h-3.5 text-indigo-600" />
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-300 mb-2">
+              <Layers className="w-3.5 h-3.5 text-emerald-600" />
               Brightloop Catalog & Terms
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
               Products, Plans & Templates
             </h1>
             <p className="text-sm text-slate-500 mt-1">
@@ -172,7 +174,7 @@ export default function CatalogPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setShowProductModal(true)}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm shadow-xs transition cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-md shadow-emerald-600/20 transition cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               Add Product
@@ -180,7 +182,7 @@ export default function CatalogPage() {
             {user?.role === "ADMIN" && (
               <button
                 onClick={() => setShowPlanModal(true)}
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-medium text-sm shadow-xs transition cursor-pointer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-semibold text-xs shadow-md shadow-teal-600/20 transition cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
                 Add Billing Plan
@@ -190,25 +192,25 @@ export default function CatalogPage() {
         </div>
 
         {message && (
-          <div className="mt-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm flex items-center gap-2">
+          <div className="mt-4 p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 flex-shrink-0 text-emerald-600" />
             <span>{message}</span>
           </div>
         )}
         {error && (
-          <div className="mt-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-sm flex items-center gap-2">
+          <div className="mt-4 p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-sm flex items-center gap-2">
             <AlertCircle className="w-4 h-4 flex-shrink-0 text-rose-600" />
             <span>{error}</span>
           </div>
         )}
 
-        <div className="mt-6 flex items-center gap-2 border-b border-slate-200 pb-3">
+        <div className="mt-6 flex items-center gap-2 border-b border-emerald-500/10 pb-3">
           <button
             onClick={() => setTab("products")}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition flex items-center gap-2 cursor-pointer ${
+            className={`px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
               tab === "products"
-                ? "bg-indigo-600 text-white shadow-xs"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                ? "bg-emerald-600 text-white shadow-xs"
+                : "text-slate-600 hover:text-slate-900 hover:bg-emerald-50/50"
             }`}
           >
             <Package className="w-4 h-4" />
@@ -216,10 +218,10 @@ export default function CatalogPage() {
           </button>
           <button
             onClick={() => setTab("plans")}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition flex items-center gap-2 cursor-pointer ${
+            className={`px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
               tab === "plans"
-                ? "bg-indigo-600 text-white shadow-xs"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                ? "bg-emerald-600 text-white shadow-xs"
+                : "text-slate-600 hover:text-slate-900 hover:bg-emerald-50/50"
             }`}
           >
             <Calendar className="w-4 h-4" />
@@ -227,10 +229,10 @@ export default function CatalogPage() {
           </button>
           <button
             onClick={() => setTab("templates")}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition flex items-center gap-2 cursor-pointer ${
+            className={`px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
               tab === "templates"
-                ? "bg-indigo-600 text-white shadow-xs"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                ? "bg-emerald-600 text-white shadow-xs"
+                : "text-slate-600 hover:text-slate-900 hover:bg-emerald-50/50"
             }`}
           >
             <FileText className="w-4 h-4" />
