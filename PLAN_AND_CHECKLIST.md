@@ -10,7 +10,7 @@
 
 - [x] **Phase 1: Architecture, Data Schema & Instant Seeding** *(0:00 - 0:30)*
 - [x] **Phase 2: Auth, Security & Role-Based Access Control (RBAC)** *(0:30 - 1:15)*
-- [ ] **Phase 3: Product Catalog, Quotation Templates & Subscriptions** *(1:15 - 2:15)*
+- [x] **Phase 3: Product Catalog, Quotation Templates & Subscriptions** *(1:15 - 2:15)*
 - [ ] **Phase 4: Automated Billing Engine & Invoicing** *(2:15 - 3:15)*
 - [ ] **Phase 5: Payment Entry, Receivables & Customer Portal** *(3:15 - 4:00)*
 - [ ] **Phase 6: Executive Finance Lead Dashboard (<2s Response)** *(4:00 - 4:40)*
@@ -57,18 +57,18 @@
 ---
 
 ### Phase 3: Product Catalog, Quotation Templates & Subscriptions (60 mins)
-- [ ] **Product & Plan Management UI/APIs:**
-  - [ ] Product creation with base sales price, cost price, notes.
-  - [ ] Variant price adjustments (e.g., +560 for Odoo).
-  - [ ] Plan creation with billing frequency (Daily, Weekly, Monthly, Yearly), min qty, lifecycle flags.
-- [ ] **Quotation Templates:**
-  - [ ] Pre-configure plan & product line presets with default validity days.
-  - [ ] Create new quotation from scratch or pre-filled template.
-- [ ] **Subscription Lifecycle State Machine:**
-  - [ ] Unique subscription number generation (`SUB-XXXX`).
-  - [ ] Status transitions: `Draft` ➔ `Quotation` ➔ `Confirmed` ➔ `Active` ➔ `Closed`.
-  - [ ] Action buttons for state transitions (Confirm quote, Activate, Pause, Resume, Close).
-  - [ ] Item lines calculation (Quantity * Price + Variant surcharge).
+- [x] **Product & Plan Management UI/APIs:**
+  - [x] Product creation with base sales price, cost price, notes.
+  - [x] Variant price adjustments (e.g., +560 for Odoo).
+  - [x] Plan creation with billing frequency (Daily, Weekly, Monthly, Yearly), min qty, lifecycle flags.
+- [x] **Quotation Templates:**
+  - [x] Pre-configure plan & product line presets with default validity days.
+  - [x] Create new quotation from scratch or pre-filled template.
+- [x] **Subscription Lifecycle State Machine:**
+  - [x] Unique subscription number generation (`SUB-XXXX`).
+  - [x] Status transitions: `Draft` ➔ `Quotation` ➔ `Confirmed` ➔ `Active` ➔ `Closed`.
+  - [x] Action buttons for state transitions (Confirm quote, Activate, Pause, Resume, Close).
+  - [x] Item lines calculation (Quantity * Price + Variant surcharge).
 
 ---
 
