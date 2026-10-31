@@ -13,7 +13,7 @@
 - [x] **Phase 3: Product Catalog, Quotation Templates & Subscriptions** *(1:15 - 2:15)*
 - [x] **Phase 4: Automated Billing Engine & Invoicing** *(2:15 - 3:15)*
 - [x] **Phase 5: Payment Entry, Receivables & Customer Portal** *(3:15 - 4:00)*
-- [ ] **Phase 6: Executive Finance Lead Dashboard (<2s Response)** *(4:00 - 4:40)*
+- [x] **Phase 6: Executive Finance Lead Dashboard (<2s Response)** *(4:00 - 4:40)*
 - [ ] **Phase 7: UI Polish, Aesthetics & Hackathon Demo Walkthrough** *(4:40 - 5:30)*
 
 ---
@@ -100,14 +100,14 @@
 ---
 
 ### Phase 6: Executive Finance Dashboard (<2s Response) (40 mins)
-- [ ] Fast analytics data aggregation API (< 2s performance benchmark).
-- [ ] Executive KPI Cards:
-  - [ ] **MRR & ARR** (Monthly & Annual Recurring Revenue)
-  - [ ] **Active Subscriptions** count & Churn/Pause rates
-  - [ ] **Total Revenue Collected** vs **Total Outstanding Receivables**
-  - [ ] **Overdue Invoices** alert count & total amount
-- [ ] Visual breakdown charts (Revenue breakdown, Plan distribution).
-- [ ] Filterable data table (filter by date range, customer, status, plan).
+- [x] Fast analytics data aggregation API (< 2s performance benchmark).
+- [x] Executive KPI Cards:
+  - [x] **MRR & ARR** (Monthly & Annual Recurring Revenue)
+  - [x] **Active Subscriptions** count & Churn/Pause rates
+  - [x] **Total Revenue Collected** vs **Total Outstanding Receivables**
+  - [x] **Overdue Invoices** alert count & total amount
+- [x] Visual breakdown charts (Revenue breakdown, Plan distribution).
+- [x] Filterable data table (filter by date range, customer, status, plan).
 
 ---
 

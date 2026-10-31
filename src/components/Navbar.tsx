@@ -107,6 +107,14 @@ export default function Navbar({ user }: NavbarProps) {
                   Catalog & Plans
                 </Link>
                 <Link
+                  href="/app/finance"
+                  className={`px-3 py-1.5 rounded-lg transition ${
+                    pathname === "/app/finance" ? "bg-slate-800 text-white font-semibold" : "hover:text-white hover:bg-slate-800/60"
+                  }`}
+                >
+                  Finance Lead
+                </Link>
+                <Link
                   href="/admin/staff"
                   className={`px-3 py-1.5 rounded-lg transition ${
                     pathname === "/admin/staff" ? "bg-slate-800 text-white font-semibold" : "hover:text-white hover:bg-slate-800/60"
@@ -134,6 +142,14 @@ export default function Navbar({ user }: NavbarProps) {
                   }`}
                 >
                   Operations
+                </Link>
+                <Link
+                  href="/app/finance"
+                  className={`px-3 py-1.5 rounded-lg transition ${
+                    pathname === "/app/finance" ? "bg-slate-800 text-white font-semibold" : "hover:text-white hover:bg-slate-800/60"
+                  }`}
+                >
+                  Finance Lead
                 </Link>
                 <Link
                   href="/app/subscriptions"
