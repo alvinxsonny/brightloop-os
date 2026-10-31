@@ -12,11 +12,12 @@ import {
   CreditCard,
   Receipt,
   AlertCircle,
-  Send,
+  DollarSign,
   Building,
   Calendar,
   Clock,
   ShieldCheck,
+  X,
 } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
@@ -31,6 +32,15 @@ export default function InvoiceDetailPage() {
   const [updating, setUpdating] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Payment Recording Modal State
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [paymentAmount, setPaymentAmount] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("BANK_TRANSFER");
+  const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split("T")[0]);
+  const [transactionRef, setTransactionRef] = useState("");
+  const [paymentNotes, setPaymentNotes] = useState("");
+  const [recordingPayment, setRecordingPayment] = useState(false);
 
   useEffect(() => {
     if (id) fetchInvoice();
@@ -50,6 +60,7 @@ export default function InvoiceDetailPage() {
       const invData = await invRes.json();
       if (!invRes.ok) throw new Error(invData.error || "Invoice not found");
       setInvoice(invData.invoice);
+      setPaymentAmount(invData.invoice.balanceDue.toString());
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -78,6 +89,40 @@ export default function InvoiceDetailPage() {
       setError(err.message);
     } finally {
       setUpdating(false);
+    }
+  };
+
+  const handleRecordPayment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setRecordingPayment(true);
+    setError(null);
+    setMessage(null);
+
+    try {
+      const res = await fetch("/api/payments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          invoiceId: id,
+          amount: paymentAmount,
+          paymentMethod,
+          paymentDate,
+          transactionReference: transactionRef,
+          notes: paymentNotes,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to record payment");
+
+      setMessage(data.message);
+      setShowPaymentModal(false);
+      fetchInvoice();
+      setTimeout(() => setMessage(null), 3500);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setRecordingPayment(false);
     }
   };
 
@@ -137,6 +182,20 @@ export default function InvoiceDetailPage() {
               Print / Save PDF
             </button>
 
+            {/* Record Payment Button */}
+            {invoice.balanceDue > 0 && invoice.status !== "CANCELLED" && (
+              <button
+                onClick={() => {
+                  setPaymentAmount(invoice.balanceDue.toString());
+                  setShowPaymentModal(true);
+                }}
+                className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition shadow-lg shadow-emerald-600/30 flex items-center gap-1.5"
+              >
+                <DollarSign className="w-3.5 h-3.5" />
+                Record Payment
+              </button>
+            )}
+
             {invoice.status === "DRAFT" && (
               <button
                 onClick={() => handleUpdateStatus("CONFIRM")}
@@ -155,7 +214,7 @@ export default function InvoiceDetailPage() {
                 className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-rose-950/60 hover:text-rose-300 text-slate-300 font-medium text-xs transition border border-slate-700 flex items-center gap-1.5 disabled:opacity-50"
               >
                 <XCircle className="w-3.5 h-3.5" />
-                Cancel Invoice
+                Cancel
               </button>
             )}
           </div>
@@ -326,6 +385,38 @@ export default function InvoiceDetailPage() {
             </div>
           </div>
 
+          {/* Payments Received History */}
+          {invoice.payments && invoice.payments.length > 0 && (
+            <div className="mt-8 pt-6 border-t border-slate-800 print:border-neutral-200">
+              <h4 className="text-xs font-semibold uppercase text-slate-400 print:text-neutral-600 mb-3 flex items-center gap-1.5">
+                <CreditCard className="w-3.5 h-3.5 text-emerald-400" />
+                Payments Recorded ({invoice.payments.length})
+              </h4>
+              <div className="space-y-2">
+                {invoice.payments.map((p: any) => (
+                  <div
+                    key={p.id}
+                    className="p-3 rounded-xl bg-slate-800/50 print:bg-neutral-50 border border-slate-700/50 print:border-neutral-200 flex items-center justify-between text-xs"
+                  >
+                    <div>
+                      <span className="font-mono text-white print:text-black font-semibold">{p.paymentNumber}</span>
+                      <span className="text-slate-400 print:text-neutral-500 ml-2">via {p.paymentMethod}</span>
+                      {p.transactionReference && (
+                        <span className="text-[11px] text-slate-500 ml-2">Ref: {p.transactionReference}</span>
+                      )}
+                    </div>
+                    <div className="text-right">
+                      <span className="font-bold text-emerald-400 print:text-black">{formatCurrency(p.amount)}</span>
+                      <span className="block text-[10px] text-slate-400 print:text-neutral-500">
+                        {formatDate(p.paymentDate)}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Footer note */}
           <div className="mt-8 pt-6 border-t border-slate-800 print:border-neutral-200 text-xs text-slate-400 print:text-neutral-500">
             <span className="font-semibold text-white print:text-black block mb-1">Payment Instructions:</span>
@@ -335,6 +426,125 @@ export default function InvoiceDetailPage() {
             </p>
           </div>
         </div>
+
+        {/* RECORD PAYMENT MODAL */}
+        {showPaymentModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in">
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
+              <button
+                onClick={() => setShowPaymentModal(false)}
+                className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition"
+              >
+                <X className="w-4 h-4" />
+              </button>
+
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                  <DollarSign className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white">Record Payment</h3>
+                  <p className="text-xs text-slate-400">Match incoming payment against {invoice.invoiceNumber}</p>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60 mb-4 flex justify-between items-center text-xs">
+                <span className="text-slate-400">Current Outstanding Balance:</span>
+                <span className="text-base font-bold text-amber-400">{formatCurrency(invoice.balanceDue)}</span>
+              </div>
+
+              <form onSubmit={handleRecordPayment} className="space-y-4">
+                <div>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-semibold uppercase text-slate-300">Payment Amount ($)</label>
+                    <button
+                      type="button"
+                      onClick={() => setPaymentAmount(invoice.balanceDue.toString())}
+                      className="text-[11px] text-indigo-400 hover:underline"
+                    >
+                      Pay Full Balance
+                    </button>
+                  </div>
+                  <input
+                    type="number"
+                    step="0.01"
+                    required
+                    max={invoice.balanceDue}
+                    value={paymentAmount}
+                    onChange={(e) => setPaymentAmount(e.target.value)}
+                    className="w-full px-3.5 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Payment Method</label>
+                  <select
+                    value={paymentMethod}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  >
+                    <option value="BANK_TRANSFER">Bank Wire / ACH Transfer</option>
+                    <option value="CREDIT_CARD">Credit / Debit Card</option>
+                    <option value="STRIPE">Stripe Payment Gateway</option>
+                    <option value="CASH">Cash / UPI</option>
+                    <option value="CHECK">Check</option>
+                  </select>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Payment Date</label>
+                    <input
+                      type="date"
+                      required
+                      value={paymentDate}
+                      onChange={(e) => setPaymentDate(e.target.value)}
+                      className="w-full px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Ref / Check #</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. TXN-98421"
+                      value={transactionRef}
+                      onChange={(e) => setTransactionRef(e.target.value)}
+                      className="w-full px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold uppercase text-slate-300 mb-1">Note (Optional)</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Cleared in Silicon Valley Bank statement"
+                    value={paymentNotes}
+                    onChange={(e) => setPaymentNotes(e.target.value)}
+                    className="w-full px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs"
+                  />
+                </div>
+
+                <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
+                  <button
+                    type="button"
+                    onClick={() => setShowPaymentModal(false)}
+                    className="px-4 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 text-sm"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={recordingPayment}
+                    className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition shadow disabled:opacity-50"
+                  >
+                    {recordingPayment ? "Saving..." : "Confirm Payment"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );

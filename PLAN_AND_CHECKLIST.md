@@ -12,7 +12,7 @@
 - [x] **Phase 2: Auth, Security & Role-Based Access Control (RBAC)** *(0:30 - 1:15)*
 - [x] **Phase 3: Product Catalog, Quotation Templates & Subscriptions** *(1:15 - 2:15)*
 - [x] **Phase 4: Automated Billing Engine & Invoicing** *(2:15 - 3:15)*
-- [ ] **Phase 5: Payment Entry, Receivables & Customer Portal** *(3:15 - 4:00)*
+- [x] **Phase 5: Payment Entry, Receivables & Customer Portal** *(3:15 - 4:00)*
 - [ ] **Phase 6: Executive Finance Lead Dashboard (<2s Response)** *(4:00 - 4:40)*
 - [ ] **Phase 7: UI Polish, Aesthetics & Hackathon Demo Walkthrough** *(4:40 - 5:30)*
 
@@ -89,13 +89,13 @@
 ---
 
 ### Phase 5: Payment Entry, Receivables & Customer Portal (45 mins)
-- [ ] **Payment Recording:**
-  - [ ] Record payment dialog: invoice selection, amount (partial/full), payment method, date, notes.
-  - [ ] Auto-update invoice status to `PAID` when fully paid.
-  - [ ] Overdue invoice calculation (due date < now && status != PAID).
-- [ ] **Customer Self-Service Portal (`/portal`):**
-  - [ ] Isolated view: Customer sees only their subscriptions and invoice history.
-  - [ ] Self-service actions: pause/renew/cancel (respecting plan lifecycle permissions).
+- [x] **Payment Recording:**
+  - [x] Record payment dialog: invoice selection, amount (partial/full), payment method, date, notes.
+  - [x] Auto-update invoice status to `PAID` when fully paid.
+  - [x] Overdue invoice calculation (due date < now && status != PAID).
+- [x] **Customer Self-Service Portal (`/portal`):**
+  - [x] Isolated view: Customer sees only their subscriptions and invoice history.
+  - [x] Self-service actions: pause/renew/cancel (respecting plan lifecycle permissions).
 
 ---
 
