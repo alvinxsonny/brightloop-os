@@ -45,18 +45,12 @@ export default function HomePage() {
           ========================================================================= */}
       <header className="glass-panel sticky top-0 z-40 border-b border-emerald-500/15 px-6 py-3.5">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-3 group cursor-pointer">
-            <div className="h-10 px-2 py-1 rounded-2xl bg-white/90 border border-emerald-500/20 shadow-xs flex items-center justify-center">
-              <img src="/logo.png" alt="BrightLoop OS" className="h-7 w-auto object-contain" />
-            </div>
-            <div>
-              <span className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-1.5">
-                BrightLoop OS
-              </span>
-              <span className="block text-[11px] text-emerald-700 font-medium">
-                Subscription & Recurring Billing Platform
-              </span>
-            </div>
+          <Link href="/" className="flex items-center cursor-pointer" title="BrightLoop">
+            <img
+              src="/logo.png"
+              alt="BrightLoop"
+              className="h-10 sm:h-11 w-auto object-contain mix-blend-multiply"
+            />
           </Link>
 
           <div className="flex items-center gap-3">
@@ -484,12 +478,13 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-12 text-xs">
           {/* Col 1: Brand Info */}
           <div className="space-y-3">
-            <div className="flex items-center space-x-2.5">
-              <div className="h-8 px-2 py-1 rounded-xl bg-white/90 border border-emerald-500/20 flex items-center justify-center shadow-xs">
-                <img src="/logo.png" alt="BrightLoop Logo" className="h-5 w-auto object-contain" />
-              </div>
-              <span className="text-base font-bold text-slate-900">BrightLoop OS</span>
-            </div>
+            <Link href="/" className="inline-block cursor-pointer" title="BrightLoop">
+              <img
+                src="/logo.png"
+                alt="BrightLoop"
+                className="h-9 w-auto object-contain mix-blend-multiply"
+              />
+            </Link>
             <p className="text-slate-500 leading-relaxed">
               Autonomous subscription management and recurring billing platform engineered specifically for Brightloop Software Inc.
             </p>

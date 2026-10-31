@@ -41,11 +41,8 @@ export default function ForgotPasswordPage() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <Link href="/" className="inline-flex items-center space-x-2.5 mb-4">
-          <div className="h-10 px-2 py-1 rounded-2xl bg-white/90 border border-emerald-500/20 shadow-xs flex items-center justify-center">
-            <img src="/logo.png" alt="BrightLoop OS" className="h-7 w-auto object-contain" />
-          </div>
-          <span className="text-2xl font-bold tracking-tight text-slate-900">BrightLoop OS</span>
+        <Link href="/" className="inline-flex items-center justify-center mb-4 cursor-pointer" title="BrightLoop">
+          <img src="/logo.png" alt="BrightLoop" className="h-11 w-auto object-contain mix-blend-multiply" />
         </Link>
         <h2 className="text-xl font-semibold text-slate-900">Reset your password</h2>
         <p className="mt-1 text-sm text-slate-500">

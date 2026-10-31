@@ -213,3 +213,4 @@ function generateReedSolomonECC(data: number[], eccLength: number): number[] {
   }
   return result;
 }
+

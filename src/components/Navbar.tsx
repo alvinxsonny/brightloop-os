@@ -35,14 +35,20 @@ export default function Navbar({ user }: NavbarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
 
-  const handleLogout = async () => {
+  const handleConfirmLogout = async () => {
+    setLoggingOut(true);
     try {
       await fetch("/api/auth/logout", { method: "POST" });
       router.push("/login");
       router.refresh();
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoggingOut(false);
+      setShowLogoutConfirm(false);
     }
   };
 
@@ -123,23 +129,19 @@ export default function Navbar({ user }: NavbarProps) {
           ========================================================================= */}
       <aside className="hidden md:flex fixed left-5 top-1/2 -translate-y-1/2 z-50 group/sidebar">
         <div className="glass-pill rounded-3xl p-2 transition-all duration-300 ease-in-out w-16 group-hover/sidebar:w-64 shadow-xl shadow-emerald-950/8 flex flex-col justify-between max-h-[92vh] overflow-hidden">
-          {/* Top Logo */}
+          {/* Top Logo - ONLY logo.png with no border and no text */}
           <div className="flex items-center h-12 px-1">
             <Link
               href="/"
-              className="w-10 h-10 rounded-2xl bg-white/90 border border-emerald-500/20 shadow-xs flex items-center justify-center shrink-0 overflow-hidden hover:scale-105 transition-transform"
-              title="BrightLoop OS Home"
+              className="flex items-center h-10 w-10 group-hover/sidebar:w-48 overflow-hidden transition-all duration-300 shrink-0 cursor-pointer"
+              title="BrightLoop"
             >
-              <img src="/logo-icon.png" alt="BrightLoop OS" className="w-8 h-8 object-contain" />
+              <img
+                src="/logo.png"
+                alt="BrightLoop"
+                className="h-8 w-auto max-w-none object-contain mix-blend-multiply"
+              />
             </Link>
-            <div className="ml-3 opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-200 whitespace-nowrap overflow-hidden">
-              <span className="font-bold text-sm tracking-tight text-slate-900 block leading-tight">
-                BrightLoop OS
-              </span>
-              <span className="text-[10px] font-medium text-emerald-700 block">
-                Subscription Engine
-              </span>
-            </div>
           </div>
 
           {/* Nav Items */}
@@ -192,7 +194,7 @@ export default function Navbar({ user }: NavbarProps) {
                   </span>
                 </div>
                 <button
-                  onClick={handleLogout}
+                  onClick={() => setShowLogoutConfirm(true)}
                   className="ml-2 opacity-0 group-hover/sidebar:opacity-100 transition-opacity p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg shrink-0 cursor-pointer"
                   title="Sign Out"
                 >
@@ -228,23 +230,14 @@ export default function Navbar({ user }: NavbarProps) {
           ========================================================================= */}
       <header className="glass-panel border-b border-emerald-500/10 sticky top-0 z-30 px-6 py-3.5 md:pl-28 transition-all">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          {/* Left Title / Location */}
-          <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-2.5">
-              <div className="h-9 px-2 py-1 rounded-xl bg-white/90 border border-emerald-500/20 shadow-xs flex items-center justify-center">
-                <img src="/logo.png" alt="BrightLoop" className="h-6 w-auto object-contain" />
-              </div>
-              <span className="font-bold text-base tracking-tight text-slate-900 hidden sm:inline">BrightLoop OS</span>
-            </Link>
-
-            <div className="hidden lg:flex items-center gap-2 text-xs text-slate-500">
-              <span>•</span>
-              <span className="font-semibold text-slate-700 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                Subscription & Recurring Billing Platform
-              </span>
-            </div>
-          </div>
+          {/* Left: ONLY the logo.png file with no border and no particular text */}
+          <Link href="/" className="flex items-center cursor-pointer" title="BrightLoop">
+            <img
+              src="/logo.png"
+              alt="BrightLoop"
+              className="h-8 sm:h-9 w-auto object-contain mix-blend-multiply"
+            />
+          </Link>
 
           {/* Right Controls */}
           <div className="flex items-center gap-3">
@@ -255,7 +248,7 @@ export default function Navbar({ user }: NavbarProps) {
               <div className="flex items-center gap-2.5">
                 {getRoleBadge(user.role)}
                 <button
-                  onClick={handleLogout}
+                  onClick={() => setShowLogoutConfirm(true)}
                   className="hidden sm:flex items-center gap-1.5 text-xs text-slate-500 hover:text-rose-600 hover:bg-rose-50 px-2.5 py-1.5 rounded-xl border border-transparent hover:border-rose-200 transition cursor-pointer"
                   title="Sign out"
                 >
@@ -318,8 +311,8 @@ export default function Navbar({ user }: NavbarProps) {
               <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
                 <span className="text-slate-600">{user.email}</span>
                 <button
-                  onClick={handleLogout}
-                  className="text-rose-600 font-semibold hover:underline"
+                  onClick={() => setShowLogoutConfirm(true)}
+                  className="text-rose-600 font-semibold hover:underline cursor-pointer"
                 >
                   Sign out
                 </button>
@@ -328,6 +321,45 @@ export default function Navbar({ user }: NavbarProps) {
           </div>
         )}
       </header>
+
+      {/* =========================================================================
+          3. SIGN OUT CONFIRMATION MODAL PROMPT
+          ========================================================================= */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-slate-200 max-w-sm w-full text-center relative animate-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 mx-auto flex items-center justify-center mb-4 shadow-xs">
+              <LogOut className="w-6 h-6" />
+            </div>
+
+            <h3 className="text-lg font-bold text-slate-900 mb-1">
+              Sign Out Confirmation
+            </h3>
+            <p className="text-xs text-slate-500 leading-relaxed mb-6">
+              Are you sure you want to end your current session? You will be redirected to the sign-in page.
+            </p>
+
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setShowLogoutConfirm(false)}
+                disabled={loggingOut}
+                className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold text-xs transition cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmLogout}
+                disabled={loggingOut}
+                className="flex-1 px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs transition shadow-sm cursor-pointer disabled:opacity-60 flex items-center justify-center gap-1.5"
+              >
+                {loggingOut ? "Signing out..." : "Sign Out"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

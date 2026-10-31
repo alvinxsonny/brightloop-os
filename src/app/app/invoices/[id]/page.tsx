@@ -263,13 +263,8 @@ export default function InvoiceDetailPage() {
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6 pb-8 border-b border-slate-200">
             <div>
-              <div className="flex items-center gap-2.5 mb-2">
-                <div className="h-9 px-2 py-1 rounded-xl bg-white border border-slate-200 flex items-center justify-center shadow-xs">
-                  <img src="/logo.png" alt="BrightLoop Logo" className="h-6 w-auto object-contain" />
-                </div>
-                <span className="text-xl font-bold tracking-tight text-slate-900">
-                  Brightloop Software Inc.
-                </span>
+              <div className="mb-2">
+                <img src="/logo.png" alt="BrightLoop" className="h-9 w-auto object-contain mix-blend-multiply" />
               </div>
               <p className="text-xs text-slate-500 leading-relaxed">
                 100 Innovation Way, Suite 400<br />

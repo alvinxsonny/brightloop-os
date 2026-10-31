@@ -152,17 +152,16 @@ export default function JudgeDemoWalkthrough() {
 
   return (
     <>
-      {/* Floating Trigger Button */}
-      <div className="fixed bottom-6 right-6 z-40">
+      {/* Floating Trigger Button - Compact "Demo" */}
+      <div className="fixed bottom-5 right-5 z-40">
         <button
           onClick={() => setIsOpen(true)}
-          className="group relative px-4 py-2.5 rounded-full bg-emerald-600 text-white font-semibold text-xs shadow-lg shadow-emerald-600/30 hover:bg-emerald-700 hover:scale-105 transition-all duration-300 flex items-center gap-2.5 cursor-pointer border border-emerald-500"
+          className="group relative px-3 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-md shadow-emerald-700/20 hover:scale-105 transition-all duration-200 flex items-center gap-1.5 cursor-pointer border border-emerald-500/80 backdrop-blur-sm"
+          title="Open Demo Walkthrough"
         >
-          <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center group-hover:rotate-12 transition-transform">
-            <Trophy className="w-3.5 h-3.5 text-white" />
-          </div>
-          <span className="tracking-tight">Demo Walkthrough</span>
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+          <Trophy className="w-3.5 h-3.5 text-amber-300" />
+          <span className="tracking-tight text-xs font-bold">Demo</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
         </button>
       </div>
 
